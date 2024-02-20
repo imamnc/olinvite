@@ -54,6 +54,18 @@ class ThemeController extends Controller
      *         required=false,
      *     ),
      *     @OA\Parameter(
+     *         name="activation",
+     *         in="query",
+     *         description="To filter by activation status",
+     *         required=false,
+     *     ),
+     *     @OA\Parameter(
+     *         name="invitation_type_id",
+     *         in="query",
+     *         description="To filter by invitation type",
+     *         required=false,
+     *     ),
+     *     @OA\Parameter(
      *         name="only_trashed",
      *         in="query",
      *         description="To get only trashed theme data",
@@ -200,6 +212,14 @@ class ThemeController extends Controller
             // Show only trashed if param only_trashed exists and true
             if (filter_var($request->only_trashed, FILTER_VALIDATE_BOOLEAN)) {
                 $query = $query->onlyTrashed();
+            }
+            // Filter by activation
+            if (!in_array($request->activation, [null, 'all'])) {
+                $query = $query->where('is_active', ($request->activation == 'active') ? true : false);
+            }
+            // Filter by invitation type
+            if ($request->invitation_type_id) {
+                $query = $query->where('invitation_type_id', $request->invitation_type_id);
             }
             // Continue filtering query
             if ($request->id) {
@@ -917,7 +937,7 @@ class ThemeController extends Controller
 
             // Remove old thumbnails
             $payload = [
-                'thumbnails' => $theme->thumbnails
+                "thumbnails" => $theme->thumbnails
             ];
             if ($theme->thumbnails != null) {
                 if ($this->removeFile($theme->thumbnails)) {
@@ -1781,10 +1801,10 @@ class ThemeController extends Controller
             // Get unallocated path
             $paths = $all_paths->filter(function ($path) use ($themes) {
                 return !$themes->contains($path);
-            });
+            })->toArray();
             // Generate response
             $data = [
-                'paths' => $paths
+                'paths' => array_values($paths)
             ];
         } catch (\Throwable $th) {
             return $this->failedResponse($th->getMessage(), $th->getCode());

@@ -176,7 +176,8 @@ class Controller extends BaseController
     // Remove File
     protected function removeFile($path)
     {
-        $file_path = str_replace('storage/', '', $path);
+        $file_path = str_replace(env('APP_URL'), '', $path);
+        $file_path = str_replace('storage/', '', $file_path);
         if (Storage::exists($file_path)) {
             Storage::delete($file_path);
             return true;

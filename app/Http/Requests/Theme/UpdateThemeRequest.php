@@ -13,7 +13,7 @@ class UpdateThemeRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required', 'exists:invitation_types,id'],
+            'id' => ['required', 'exists:themes,id'],
             'invitation_type_id' => ['required', 'exists:invitation_types,id'],
             'name' => ['required', 'min:3', 'max:80', Rule::unique('themes', 'name')->ignore($this->id)],
             'path' => ['required', 'min:3', 'max:50', Rule::unique('themes', 'path')->ignore($this->id)],
