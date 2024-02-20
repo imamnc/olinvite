@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('invitation_type_id')->nullable()->constrained('invitation_types', 'id')->nullOnDelete();
             $table->string('name');
             $table->string('path');
-            $table->string('thumbnails');
+            $table->string('thumbnails')->nullable();
             $table->decimal('price', 19, 2);
             $table->boolean('is_active')->default(true);
             $table->timestamps();

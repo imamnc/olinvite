@@ -175,6 +175,12 @@ return [
         'update' => [
             'success' => 'Berhasil mengubah data tema'
         ],
+        'activate' => [
+            'success' => 'Berhasil mengaktifkan data tema'
+        ],
+        'deactivate' => [
+            'success' => 'Berhasil menonaktifkan data tema'
+        ],
         'delete' => [
             'success' => 'Berhasil menghapus data tema'
         ],

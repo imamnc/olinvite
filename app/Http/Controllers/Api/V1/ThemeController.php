@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Theme\ActivationThemeRequest;
 use App\Http\Requests\Theme\CreateThemeRequest;
 use App\Http\Requests\Theme\DeleteThemeRequest;
 use App\Http\Requests\Theme\GetThemeRequest;
@@ -195,7 +196,7 @@ class ThemeController extends Controller
         try {
             $data = [];
             // Main query
-            $query = Theme::query();
+            $query = Theme::with('invitation_type');
             // Show only trashed if param only_trashed exists and true
             if (filter_var($request->only_trashed, FILTER_VALIDATE_BOOLEAN)) {
                 $query = $query->onlyTrashed();
@@ -933,6 +934,336 @@ class ThemeController extends Controller
         }
         // Success response
         return $this->successResponse(trans('api-response.theme.remove_thumbnails.success'), [
+            "theme" => $theme
+        ]);
+    }
+
+    /**
+     * @OA\ Patch(
+     *     path="/theme/activate",
+     *     summary="Set status theme to active",
+     *     tags={"Themes"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *				@OA\Schema(
+     *                 @OA\Property(
+     *                     property="id",
+     *                     type="integer"
+     *                 )
+     *             ),
+     *				example={
+     *					"id": 1
+     *				}
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                  "success": true,
+     *                  "message": "false",
+     *                  "data": {}
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation Error",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="error_code",
+     *                     type="integer",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                  "success": false,
+     *                  "message": "Validation errors",
+     *                  "error_code": 422,
+     *                  "data": {
+     *                      "errors": {
+     *                          "email": "<Error Messages>"
+     *                      }
+     *                  }
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated Request",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="error_code",
+     *                     type="integer",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                 "success": false,
+     *                 "message": "Unauthenticated",
+     *                 "error_code": 401,
+     *                 "data": {}
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="error_code",
+     *                     type="integer",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                  "success": false,
+     *                  "message": "<Error Messages>",
+     *                  "error_code": 500,
+     *                  "data": {}
+     *             }
+     *         )
+     *     ),
+     * )
+     */
+    // Activate theme data
+    public function activate(ActivationThemeRequest $request)
+    {
+        try {
+            // Get theme data
+            $theme = Theme::find($request->id);
+            // Update data
+            DB::beginTransaction();
+            $theme->update(['is_active' => true]);
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return $this->failedResponse($e->getMessage(), $e->getCode());
+        }
+        // Success response
+        return $this->successResponse(trans('api-response.theme.activate.success'), [
+            "theme" => $theme
+        ]);
+    }
+
+    /**
+     * @OA\ Patch(
+     *     path="/theme/deactivate",
+     *     summary="Set status theme to nonactive",
+     *     tags={"Themes"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *				@OA\Schema(
+     *                 @OA\Property(
+     *                     property="id",
+     *                     type="integer"
+     *                 )
+     *             ),
+     *				example={
+     *					"id": 1
+     *				}
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                  "success": true,
+     *                  "message": "false",
+     *                  "data": {}
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation Error",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="error_code",
+     *                     type="integer",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                  "success": false,
+     *                  "message": "Validation errors",
+     *                  "error_code": 422,
+     *                  "data": {
+     *                      "errors": {
+     *                          "email": "<Error Messages>"
+     *                      }
+     *                  }
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated Request",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="error_code",
+     *                     type="integer",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                 "success": false,
+     *                 "message": "Unauthenticated",
+     *                 "error_code": 401,
+     *                 "data": {}
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="error_code",
+     *                     type="integer",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                  "success": false,
+     *                  "message": "<Error Messages>",
+     *                  "error_code": 500,
+     *                  "data": {}
+     *             }
+     *         )
+     *     ),
+     * )
+     */
+    // Deactivate theme data
+    public function deactivate(ActivationThemeRequest $request)
+    {
+        try {
+            // Get theme data
+            $theme = Theme::find($request->id);
+            // Update data
+            DB::beginTransaction();
+            $theme->update(['is_active' => false]);
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return $this->failedResponse($e->getMessage(), $e->getCode());
+        }
+        // Success response
+        return $this->successResponse(trans('api-response.theme.deactivate.success'), [
             "theme" => $theme
         ]);
     }

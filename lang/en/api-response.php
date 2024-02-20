@@ -175,6 +175,12 @@ return [
         'update' => [
             'success' => 'Theme was updated successfully'
         ],
+        'activate' => [
+            'success' => 'Theme was activated successfully'
+        ],
+        'deactivate' => [
+            'success' => 'Theme was deactivated successfully'
+        ],
         'delete' => [
             'success' => 'Theme was deleted successfully'
         ],

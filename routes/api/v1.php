@@ -123,8 +123,6 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::put('/', [MusicController::class, 'update'])->name('update');
         Route::delete('/', [MusicController::class, 'delete'])->name('delete');
         Route::post('/file', [MusicController::class, 'updateFile'])->name('update_file');
-        Route::patch('/activate', [MusicController::class, 'activate'])->name('activate');
-        Route::patch('/deactivate', [MusicController::class, 'deactivate'])->name('deactivate');
         Route::post('/restore', [MusicController::class, 'restore'])->name('restore');
         Route::get('/artist', [MusicController::class, 'artist'])->name('artist');
     });
