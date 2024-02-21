@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('invitations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('theme_id')->nullable()->constrained('themes', 'id')->nullOnDelete();
-            $table->string('customer_name');
-            $table->string('email');
+            $table->string('customer_name')->nullable();
+            $table->string('email')->nullable();
             $table->string('phone');
             $table->boolean('is_active')->default(false);
             $table->timestamps();
-            $table->date('activated_at');
-            $table->date('expired_at');
+            $table->date('activated_at')->nullable();
+            $table->date('expired_at')->nullable();
         });
     }
 

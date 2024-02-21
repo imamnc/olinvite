@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('wedding_data', function (Blueprint $table) {
             $table->id();
+            // Invitation ID
             $table->foreignId('invitation_id')->constrained('invitations', 'id')->cascadeOnDelete();
             // Grooms
             $table->string('groom_name');
@@ -47,7 +48,18 @@ return new class extends Migration
             // Music
             $table->foreignId('music_id')->nullable()->constrained('music', 'id')->nullOnDelete();
             $table->string('custom_music_path')->nullable();
-            // Timestamp
+            // Features activation
+            $table->boolean('quotes_feature')->default(true);
+            $table->boolean('video_feature')->default(true);
+            $table->boolean('akad_feature')->default(true);
+            $table->boolean('reception_feature')->default(true);
+            $table->boolean('gift_feature')->default(true);
+            $table->boolean('gallery_feature')->default(true);
+            $table->boolean('wish_feature')->default(true);
+            $table->boolean('story_feature')->default(true);
+            $table->boolean('music_feature')->default(true);
+            $table->boolean('custom_music_feature')->default(true);
+            // Timestamps
             $table->timestamps();
         });
     }

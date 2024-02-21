@@ -23,7 +23,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
     // Welcome Routes
     Route::get('/', [WelcomeController::class, 'index'])->name('user');
 
-    // Authentication Group
+    // Authentication Routes
     Route::prefix('/auth')->name('auth.')->group(function () {
         Route::post('/login', [AuthenticationController::class, 'login'])->name('login');
         Route::post('/register', [AuthenticationController::class, 'register'])->name('register')
@@ -32,7 +32,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
             ->middleware('auth:sanctum');
     });
 
-    // Region Group
+    // Region Routes
     Route::prefix('/region')->name('region.')->group(function () {
         Route::get('/province', [RegionController::class, 'province'])->name('province');
         Route::get('/city', [RegionController::class, 'city'])->name('city');
@@ -40,43 +40,52 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::get('/village', [RegionController::class, 'village'])->name('village');
     });
 
-    // Bank Channels Group
+    // Bank Channels Routes
     Route::prefix('/bank_channel')->name('bank_channel.')->group(function () {
         Route::get('/', [BankChannelController::class, 'get'])->name('get');
-        Route::post('/', [BankChannelController::class, 'create'])->name('create');
-        Route::put('/', [BankChannelController::class, 'update'])->name('update');
-        Route::delete('/', [BankChannelController::class, 'delete'])->name('delete');
-        Route::post('/logo', [BankChannelController::class, 'updateLogo'])->name('update_logo');
-        Route::delete('/logo', [BankChannelController::class, 'removeLogo'])->name('remove_logo');
-        Route::patch('/activate', [BankChannelController::class, 'activate'])->name('activate');
-        Route::patch('/deactivate', [BankChannelController::class, 'deactivate'])->name('deactivate');
-        Route::post('/restore', [BankChannelController::class, 'restore'])->name('restore');
+        // Guarded
+        Route::middleware(['auth:sanctum'])->group(function () {
+            Route::post('/', [BankChannelController::class, 'create'])->name('create');
+            Route::put('/', [BankChannelController::class, 'update'])->name('update');
+            Route::delete('/', [BankChannelController::class, 'delete'])->name('delete');
+            Route::post('/logo', [BankChannelController::class, 'updateLogo'])->name('update_logo');
+            Route::delete('/logo', [BankChannelController::class, 'removeLogo'])->name('remove_logo');
+            Route::patch('/activate', [BankChannelController::class, 'activate'])->name('activate');
+            Route::patch('/deactivate', [BankChannelController::class, 'deactivate'])->name('deactivate');
+            Route::post('/restore', [BankChannelController::class, 'restore'])->name('restore');
+        });
     });
 
-    // Invitation Type Group
+    // Invitation Type Routes
     Route::prefix('/invitation_type')->name('invitation_type.')->group(function () {
         Route::get('/', [InvitationTypeController::class, 'get'])->name('get');
-        Route::post('/', [InvitationTypeController::class, 'create'])->name('create');
-        Route::put('/', [InvitationTypeController::class, 'update'])->name('update');
-        Route::delete('/', [InvitationTypeController::class, 'delete'])->name('delete');
-        Route::patch('/activate', [InvitationTypeController::class, 'activate'])->name('activate');
-        Route::patch('/deactivate', [InvitationTypeController::class, 'deactivate'])->name('deactivate');
-        Route::post('/restore', [InvitationTypeController::class, 'restore'])->name('restore');
+        // Guarded
+        Route::middleware(['auth:sanctum'])->group(function () {
+            Route::post('/', [InvitationTypeController::class, 'create'])->name('create');
+            Route::put('/', [InvitationTypeController::class, 'update'])->name('update');
+            Route::delete('/', [InvitationTypeController::class, 'delete'])->name('delete');
+            Route::patch('/activate', [InvitationTypeController::class, 'activate'])->name('activate');
+            Route::patch('/deactivate', [InvitationTypeController::class, 'deactivate'])->name('deactivate');
+            Route::post('/restore', [InvitationTypeController::class, 'restore'])->name('restore');
+        });
     });
 
-    // Payment Channel Group
+    // Payment Channel Routes
     Route::prefix('/payment_channel')->name('payment_channel.')->group(function () {
         Route::get('/', [PaymentChannelController::class, 'get'])->name('get');
-        Route::post('/', [PaymentChannelController::class, 'create'])->name('create');
-        Route::put('/', [PaymentChannelController::class, 'update'])->name('update');
-        Route::delete('/', [PaymentChannelController::class, 'delete'])->name('delete');
-        Route::patch('/activate', [PaymentChannelController::class, 'activate'])->name('activate');
-        Route::patch('/deactivate', [PaymentChannelController::class, 'deactivate'])->name('deactivate');
-        Route::post('/restore', [PaymentChannelController::class, 'restore'])->name('restore');
+        // Guarded
+        Route::middleware(['auth:sanctum'])->group(function () {
+            Route::post('/', [PaymentChannelController::class, 'create'])->name('create');
+            Route::put('/', [PaymentChannelController::class, 'update'])->name('update');
+            Route::delete('/', [PaymentChannelController::class, 'delete'])->name('delete');
+            Route::patch('/activate', [PaymentChannelController::class, 'activate'])->name('activate');
+            Route::patch('/deactivate', [PaymentChannelController::class, 'deactivate'])->name('deactivate');
+            Route::post('/restore', [PaymentChannelController::class, 'restore'])->name('restore');
+        });
     });
 
-    // Permission Group
-    Route::prefix('/permission_group')->name('permission_group.')->group(function () {
+    // Permission Routes
+    Route::prefix('/permission_group')->name('permission_group.')->middleware('auth:sanctum')->group(function () {
         Route::get('/', [PermissionGroupController::class, 'get'])->name('get');
         Route::post('/', [PermissionGroupController::class, 'create'])->name('create');
         Route::put('/', [PermissionGroupController::class, 'update'])->name('update');
@@ -84,8 +93,8 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::post('/restore', [PermissionGroupController::class, 'restore'])->name('restore');
     });
 
-    // Permission
-    Route::prefix('/permission')->name('permission.')->group(function () {
+    // Permission Routes
+    Route::prefix('/permission')->name('permission.')->middleware('auth:sanctum')->group(function () {
         Route::get('/', [PermissionController::class, 'get'])->name('get');
         Route::post('/', [PermissionController::class, 'create'])->name('create');
         Route::put('/', [PermissionController::class, 'update'])->name('update');
@@ -93,8 +102,8 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::post('/restore', [PermissionController::class, 'restore'])->name('restore');
     });
 
-    // Role
-    Route::prefix('/role')->name('role.')->group(function () {
+    // Role Routes
+    Route::prefix('/role')->name('role.')->middleware('auth:sanctum')->group(function () {
         Route::get('/', [RoleController::class, 'get'])->name('get');
         Route::post('/', [RoleController::class, 'create'])->name('create');
         Route::put('/', [RoleController::class, 'update'])->name('update');
@@ -102,37 +111,46 @@ Route::prefix('v1')->name('v1.')->group(function () {
         Route::post('/restore', [RoleController::class, 'restore'])->name('restore');
     });
 
-    // Theme Group
+    // Theme Routes
     Route::prefix('/theme')->name('theme.')->group(function () {
         Route::get('/', [ThemeController::class, 'get'])->name('get');
-        Route::post('/', [ThemeController::class, 'create'])->name('create');
-        Route::put('/', [ThemeController::class, 'update'])->name('update');
-        Route::delete('/', [ThemeController::class, 'delete'])->name('delete');
-        Route::post('/thumbnails', [ThemeController::class, 'updateThumbnails'])->name('update_thumbnails');
-        Route::delete('/thumbnails', [ThemeController::class, 'removeThumbnails'])->name('remove_thumbnails');
-        Route::patch('/activate', [ThemeController::class, 'activate'])->name('activate');
-        Route::patch('/deactivate', [ThemeController::class, 'deactivate'])->name('deactivate');
-        Route::post('/restore', [ThemeController::class, 'restore'])->name('restore');
-        Route::get('/unallocated_path', [ThemeController::class, 'unallocated_path'])->name('get_unallocated_path');
+        // Guarded
+        Route::middleware(['auth:sanctum'])->group(function () {
+            Route::post('/', [ThemeController::class, 'create'])->name('create');
+            Route::put('/', [ThemeController::class, 'update'])->name('update');
+            Route::delete('/', [ThemeController::class, 'delete'])->name('delete');
+            Route::post('/thumbnails', [ThemeController::class, 'updateThumbnails'])->name('update_thumbnails');
+            Route::delete('/thumbnails', [ThemeController::class, 'removeThumbnails'])->name('remove_thumbnails');
+            Route::patch('/activate', [ThemeController::class, 'activate'])->name('activate');
+            Route::patch('/deactivate', [ThemeController::class, 'deactivate'])->name('deactivate');
+            Route::post('/restore', [ThemeController::class, 'restore'])->name('restore');
+            Route::get('/unallocated_path', [ThemeController::class, 'unallocated_path'])->name('get_unallocated_path');
+        });
     });
 
-    // Music Group
-    Route::prefix('/music')->name('music.')->group(function () {
+    // Music Routes
+    Route::prefix('/music')->name('music.')->middleware('auth:sanctum')->group(function () {
         Route::get('/', [MusicController::class, 'get'])->name('get');
-        Route::post('/', [MusicController::class, 'create'])->name('create');
-        Route::put('/', [MusicController::class, 'update'])->name('update');
-        Route::delete('/', [MusicController::class, 'delete'])->name('delete');
-        Route::post('/file', [MusicController::class, 'updateFile'])->name('update_file');
-        Route::post('/restore', [MusicController::class, 'restore'])->name('restore');
-        Route::get('/artist', [MusicController::class, 'artist'])->name('artist');
+        // Guarded
+        Route::middleware(['auth:sanctum'])->group(function () {
+            Route::post('/', [MusicController::class, 'create'])->name('create');
+            Route::put('/', [MusicController::class, 'update'])->name('update');
+            Route::delete('/', [MusicController::class, 'delete'])->name('delete');
+            Route::post('/file', [MusicController::class, 'updateFile'])->name('update_file');
+            Route::post('/restore', [MusicController::class, 'restore'])->name('restore');
+            Route::get('/artist', [MusicController::class, 'artist'])->name('artist');
+        });
     });
 
-    // Quotes Group
-    Route::prefix('/quote')->name('quote.')->group(function () {
+    // Quotes Routes
+    Route::prefix('/quote')->name('quote.')->middleware('auth:sanctum')->group(function () {
         Route::get('/', [QuotesController::class, 'get'])->name('get');
-        Route::post('/', [QuotesController::class, 'create'])->name('create');
-        Route::put('/', [QuotesController::class, 'update'])->name('update');
-        Route::delete('/', [QuotesController::class, 'delete'])->name('delete');
-        Route::post('/restore', [QuotesController::class, 'restore'])->name('restore');
+        // Guarded
+        Route::middleware(['auth:sanctum'])->group(function () {
+            Route::post('/', [QuotesController::class, 'create'])->name('create');
+            Route::put('/', [QuotesController::class, 'update'])->name('update');
+            Route::delete('/', [QuotesController::class, 'delete'])->name('delete');
+            Route::post('/restore', [QuotesController::class, 'restore'])->name('restore');
+        });
     });
 });
