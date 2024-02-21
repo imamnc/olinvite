@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('theme_id')->nullable()->constrained('themes', 'id')->nullOnDelete();
             $table->string('customer_name')->nullable();
             $table->string('email')->nullable();
-            $table->string('phone');
+            $table->string('phone')->nullable();
             $table->boolean('is_active')->default(false);
             $table->timestamps();
             $table->date('activated_at')->nullable();
