@@ -243,4 +243,24 @@ return [
             'success' => 'Checking status quote successfull'
         ]
     ],
+    'invitation' => [
+        'create' => [
+            'success' => 'Invitation was created successfully'
+        ],
+        'get' => [
+            'success' => 'Get data invitation successfull'
+        ],
+        'update' => [
+            'success' => 'Invitation was updated successfully'
+        ],
+        'delete' => [
+            'success' => 'Invitation was deleted successfully'
+        ],
+        'restore' => [
+            'success' => 'Deleted invitation was restored successfully'
+        ],
+        'check_related' => [
+            'success' => 'Checking status invitation successfull'
+        ]
+    ],
 ];

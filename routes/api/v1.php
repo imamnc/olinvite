@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AuthenticationController;
 use App\Http\Controllers\Api\V1\BankChannelController;
+use App\Http\Controllers\Api\V1\InvitationController;
 use App\Http\Controllers\Api\V1\InvitationTypeController;
 use App\Http\Controllers\Api\V1\MusicController;
 use App\Http\Controllers\Api\V1\PaymentChannelController;
@@ -129,7 +130,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
     });
 
     // Music Routes
-    Route::prefix('/music')->name('music.')->middleware('auth:sanctum')->group(function () {
+    Route::prefix('/music')->name('music.')->group(function () {
         Route::get('/', [MusicController::class, 'get'])->name('get');
         // Guarded
         Route::middleware(['auth:sanctum'])->group(function () {
@@ -143,7 +144,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
     });
 
     // Quotes Routes
-    Route::prefix('/quote')->name('quote.')->middleware('auth:sanctum')->group(function () {
+    Route::prefix('/quote')->name('quote.')->group(function () {
         Route::get('/', [QuotesController::class, 'get'])->name('get');
         // Guarded
         Route::middleware(['auth:sanctum'])->group(function () {
@@ -151,6 +152,18 @@ Route::prefix('v1')->name('v1.')->group(function () {
             Route::put('/', [QuotesController::class, 'update'])->name('update');
             Route::delete('/', [QuotesController::class, 'delete'])->name('delete');
             Route::post('/restore', [QuotesController::class, 'restore'])->name('restore');
+        });
+    });
+
+    // Invitation Routes
+    Route::prefix('/invitation')->name('invitation.')->group(function () {
+        Route::get('/', [InvitationController::class, 'get'])->name('get');
+        // Guarded
+        Route::middleware(['auth:sanctum'])->group(function () {
+            Route::post('/', [InvitationController::class, 'create'])->name('create');
+            Route::put('/', [InvitationController::class, 'update'])->name('update');
+            Route::delete('/', [InvitationController::class, 'delete'])->name('delete');
+            Route::post('/restore', [InvitationController::class, 'restore'])->name('restore');
         });
     });
 });

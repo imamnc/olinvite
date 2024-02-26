@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('invitations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('theme_id')->nullable()->constrained('themes', 'id')->nullOnDelete();
+            $table->string('prefix_route')->nullable();
             $table->string('customer_name')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();

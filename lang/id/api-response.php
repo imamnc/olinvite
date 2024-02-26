@@ -223,7 +223,7 @@ return [
             'success' => 'Berhasil mendapatkan data artis'
         ],
     ],
-    'kutipan' => [
+    'quote' => [
         'create' => [
             'success' => 'Berhasil menambahkan kutipan'
         ],
@@ -241,6 +241,26 @@ return [
         ],
         'check_related' => [
             'success' => 'Berhasil memeriksa status kutipan'
+        ]
+    ],
+    'invitation' => [
+        'create' => [
+            'success' => 'Berhasil menambahkan undangan'
+        ],
+        'get' => [
+            'success' => 'Berhasil mendapatkan data undangan'
+        ],
+        'update' => [
+            'success' => 'Berhasil mengubah data undangan'
+        ],
+        'delete' => [
+            'success' => 'Berhasil menghapus data undangan'
+        ],
+        'restore' => [
+            'success' => 'Berhasil merestore data undangan'
+        ],
+        'check_related' => [
+            'success' => 'Berhasil memeriksa status undangan'
         ]
     ],
 ];

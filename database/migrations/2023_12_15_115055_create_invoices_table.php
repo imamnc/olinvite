@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('invitation_id')->constrained('invitations', 'id')->cascadeOnDelete();
             $table->string('code')->unique();
-            $table->decimal('amount', 19, 2);
+            $table->decimal('amount', 19, 2)->nullable();
             $table->boolean('is_paid')->default(false);
             $table->timestamps();
         });
