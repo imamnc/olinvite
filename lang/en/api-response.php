@@ -261,6 +261,10 @@ return [
         ],
         'check_related' => [
             'success' => 'Checking status invitation successfull'
-        ]
+        ],
+        'check_prefix_route' => [
+            'success' => 'Prefix route is available to use',
+            'failed' => 'Prefix route is already in used'
+        ],
     ],
 ];

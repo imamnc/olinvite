@@ -13,6 +13,7 @@ class Theme extends Model
 {
     use HasFactory, SoftDeletes;
     protected $guarded = [];
+    protected $with = ['invitation_type'];
 
     // Cast thumbnails attribute
     protected function thumbnails(): Attribute

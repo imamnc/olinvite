@@ -15,13 +15,20 @@ class CreateInvitationRequest extends FormRequest
     public function rules()
     {
         return [
+            "theme_id" => "required|numeric",
             "prefix_route" => [
                 'required', Rule::notIn(
-                    Invitation::where('prefix_route', $this->prefix_route)->where('expired_at', '<=', Carbon::now())->get()->toArray()
+                    Invitation::where('prefix_route', strtolower($this->prefix_route))->where(function ($sub1) {
+                        $sub1->whereNull('expired_at');
+                        $sub1->orWhere(function ($sub2) {
+                            $sub2->whereNotNull('expired_at')->where('expired_at', '<=', Carbon::now()->toDateTimeString());
+                        });
+                    })->get()->pluck('prefix_route')
                 )
             ],
-            "phone" => "nullable",
-            "customer_name" => "nullable|min:5",
+            "customer_name" => "required|min:5",
+            "phone" => "required|numeric",
+            "email" => "nullable|email"
         ];
     }
 

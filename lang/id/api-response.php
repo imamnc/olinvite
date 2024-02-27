@@ -261,6 +261,10 @@ return [
         ],
         'check_related' => [
             'success' => 'Berhasil memeriksa status undangan'
-        ]
+        ],
+        'check_prefix_route' => [
+            'success' => 'Link tersedia dan dapat digunakan',
+            'failed' => 'Link sudah digunakan undangan lain'
+        ],
     ],
 ];
