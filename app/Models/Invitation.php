@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
-class Invitation extends Model
+class Invitation extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, HasApiTokens;
+    protected $guard = 'invitation';
     protected $guarded = [];
 
     /**

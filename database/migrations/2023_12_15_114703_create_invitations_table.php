@@ -15,13 +15,17 @@ return new class extends Migration
             $table->id();
             $table->foreignId('theme_id')->nullable()->constrained('themes', 'id')->nullOnDelete();
             $table->string('prefix_route')->nullable();
+            $table->string('code')->unique();
+            $table->string('password');
             $table->string('customer_name')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->boolean('is_active')->default(false);
+            $table->boolean('is_published')->default(false);
+            $table->boolean('is_form_open')->default(false);
             $table->timestamps();
-            $table->date('activated_at')->nullable();
-            $table->date('expired_at')->nullable();
+            $table->timestamp('activated_at')->nullable();
+            $table->timestamp('expired_at')->nullable();
         });
     }
 

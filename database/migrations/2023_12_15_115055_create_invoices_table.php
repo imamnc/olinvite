@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('amount', 19, 2)->nullable();
             $table->boolean('is_paid')->default(false);
             $table->timestamps();
+            $table->timestamp('paid_at')->nullable();
         });
     }
 

@@ -403,7 +403,9 @@ class InvitationController extends Controller
             // Get theme
             $theme = Theme::find($request->theme_id);
             // Add Invitation
-            $invitation = Invitation::create($request->only('theme_id', 'prefix_route', 'customer_name', 'phone', 'email'));
+            $invitation_payload = $request->only('theme_id', 'prefix_route', 'customer_name', 'phone', 'email');
+            $invitation_payload['code'] = $this->random_strings(16);
+            $invitation = Invitation::create($invitation_payload);
             // Add invoice
             Invoice::create([
                 'invitation_id' => $invitation->id,

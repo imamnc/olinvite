@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Models\Invitation;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthenticationController extends Controller
@@ -23,14 +25,14 @@ class AuthenticationController extends Controller
      *             mediaType="application/json",
      *             @OA\Schema(
      *                 @OA\Property(
-     *                     property="email",
+     *                     property="identifier",
      *                     type="string"
      *                 ),
      *                 @OA\Property(
      *                     property="password",
      *                     type="string"
      *                 ),
-     *                 example={"email": "admin@olinvite.test", "password": "12345678"}
+     *                 example={"identifier": "admin@olinvite.test", "password": "12345678"}
      *             )
      *         )
      *     ),
@@ -133,17 +135,25 @@ class AuthenticationController extends Controller
     public function login(LoginRequest $request)
     {
         try {
-            if (!auth()->attempt($request->only('email', 'password'))) {
-                throw new Exception("Invalid login credentials", Response::HTTP_BAD_REQUEST);
+            // Check login admin
+            if (!Auth::attempt(['email' => $request->identifier, 'password' => $request->password])) {
+                // Check login invitation
+                if (!Auth::guard('invitation')->attempt(['code' => $request->identifier, 'password' => $request->password])) {
+                    throw new Exception("Invalid login credentials", Response::HTTP_BAD_REQUEST);
+                }
+                // Success response
+                return $this->successResponse("Login successfull", [
+                    'access_token' => Auth::guard('invitation')->user()->createToken('login')->plainTextToken
+                ]);
             }
+
+            // Success response
+            return $this->successResponse("Login successfull", [
+                'access_token' => Auth::user()->createToken('login')->plainTextToken
+            ]);
         } catch (\Throwable $th) {
             return $this->failedResponse($th->getMessage(), $th->getCode());
         }
-
-        // Success response
-        return $this->successResponse("Login successfull", [
-            'access_token' => $request->user()->createToken('login')->plainTextToken
-        ]);
     }
 
     /**

@@ -184,4 +184,10 @@ class Controller extends BaseController
         }
         return false;
     }
+
+    // Generate random strings
+    protected function random_strings($length_of_string)
+    {
+        return substr(bin2hex(random_bytes($length_of_string)), 0, $length_of_string);
+    }
 }
