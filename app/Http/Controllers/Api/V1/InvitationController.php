@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Invitation\CheckPrefixRouteRequest;
 use App\Http\Requests\Invitation\CreateInvitationRequest;
 use App\Http\Requests\Invitation\GetInvitationRequest;
+use App\Http\Requests\Invitation\UpdateInvitationRequest;
 use App\Models\Invitation;
 use App\Models\Invoice;
 use App\Models\Theme;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class InvitationController extends Controller
 {
@@ -256,17 +258,32 @@ class InvitationController extends Controller
      *              mediaType="application/json",
      *				@OA\Schema(
      *                 @OA\Property(
+     *                     property="theme_id",
+     *                     type="number",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="prefix_route",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
      *                     property="customer_name",
      *                     type="string",
      *                 ),
      *                 @OA\Property(
      *                     property="phone",
      *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="email",
+     *                     type="string",
      *                 )
      *             ),
      *             example={
+     *                 "theme_id": 1,
+     *                 "prefix_route": "weddingimamnc",
      *                 "customer_name": "John Doe",
      *                 "phone": "+628573982223",
+     *                 "email": "kacun@mail.com",
      *             }
      *         )
      *     ),
@@ -405,6 +422,8 @@ class InvitationController extends Controller
             // Add Invitation
             $invitation_payload = $request->only('theme_id', 'prefix_route', 'customer_name', 'phone', 'email');
             $invitation_payload['code'] = $this->random_strings(16);
+            $invitation_payload['password_default'] = $this->random_strings(8);
+            $invitation_payload['password'] = Hash::make($invitation_payload['password_default']);
             $invitation = Invitation::create($invitation_payload);
             // Add invoice
             Invoice::create([
@@ -422,6 +441,206 @@ class InvitationController extends Controller
 
         // Success response
         return $this->successResponse(trans('api-response.invitation.create.success'), [
+            "invitation" => $invitation
+        ]);
+    }
+
+    /**
+     * @OA\ Put(
+     *     path="/invitation",
+     *     summary="Edit data invitation",
+     *     tags={"Invitations"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *              mediaType="application/json",
+     *				@OA\Schema(
+     *                 @OA\Property(
+     *                     property="id",
+     *                     type="number",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="theme_id",
+     *                     type="number",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="prefix_route",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="customer_name",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="phone",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="email",
+     *                     type="string",
+     *                 )
+     *             ),
+     *             example={
+     *                 "id": 1,
+     *                 "theme_id": 1,
+     *                 "prefix_route": "weddingimamnc",
+     *                 "customer_name": "John Doe",
+     *                 "phone": "+628573982223",
+     *                 "email": "kacun@mail.com",
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                  "success": true,
+     *                  "message": "false",
+     *                  "data": {}
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation Error",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="error_code",
+     *                     type="integer",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                  "success": false,
+     *                  "message": "Validation errors",
+     *                  "error_code": 422,
+     *                  "data": {
+     *                      "errors": {
+     *                          "email": "<Error Messages>"
+     *                      }
+     *                  }
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated Request",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="error_code",
+     *                     type="integer",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                 "success": false,
+     *                 "message": "Unauthenticated",
+     *                 "error_code": 401,
+     *                 "data": {}
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="error_code",
+     *                     type="integer",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                  "success": false,
+     *                  "message": "<Error Messages>",
+     *                  "error_code": 500,
+     *                  "data": {}
+     *             }
+     *         )
+     *     ),
+     * )
+     */
+    // Create data invitation type data
+    public function update(UpdateInvitationRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            // Get invitation
+            $invitation = Invitation::find($request->id);
+            // Get theme
+            $theme = Theme::find($request->theme_id);
+            // Update Invitation
+            $invitation_payload = $request->only('theme_id', 'prefix_route', 'customer_name', 'phone', 'email');
+            $invitation->update($invitation_payload);
+            // Update Invoice
+            $invitation->invoice()->update([
+                'amount' => $theme?->price
+            ]);
+            // Invitation
+            $invitation = Invitation::with('invoice')->find($invitation->id);
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return $this->failedResponse($e->getMessage(), $e->getCode());
+        }
+
+        // Success response
+        return $this->successResponse(trans('api-response.invitation.update.success'), [
             "invitation" => $invitation
         ]);
     }
@@ -571,9 +790,12 @@ class InvitationController extends Controller
                 $sub1->orWhere(function ($sub2) {
                     $sub2->whereNotNull('expired_at')->where('expired_at', '<=', Carbon::now()->toDateTimeString());
                 });
-            })->first();
+            });
+            if ($request->except_id) {
+                $invitation = $invitation->where('id', '!=', $request->except_id);
+            }
             // Throw error if prefix already used
-            if ($invitation) {
+            if ($invitation->first()) {
                 return $this->failedResponse(trans('api-response.invitation.check_prefix_route.failed'), 422, [
                     'prefix_route' => [trans('api-response.invitation.check_prefix_route.failed')]
                 ]);

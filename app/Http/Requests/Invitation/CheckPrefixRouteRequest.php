@@ -16,6 +16,7 @@ class CheckPrefixRouteRequest extends FormRequest
     {
         return [
             "prefix_route" => ["required"],
+            "except_id" => ["nullable", "exists:invitations,id"],
         ];
     }
 

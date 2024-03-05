@@ -26,9 +26,15 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
         ]);
 
-        Invitation::create([
+        // Invitation
+        $invitation = Invitation::create([
             'code' => 'invitation1',
-            'password' => Hash::make('12345678')
+            'password' => Hash::make('12345678'),
+            'password_default' => '12345678',
+        ]);
+        // Invoice
+        $invitation->invoice()->create([
+            'code' => strtoupper(uniqid('INV-')),
         ]);
     }
 }

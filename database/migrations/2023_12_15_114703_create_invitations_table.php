@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('prefix_route')->nullable();
             $table->string('code')->unique();
             $table->string('password');
+            $table->string('password_default');
             $table->string('customer_name')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
