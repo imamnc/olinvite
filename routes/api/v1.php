@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\QuotesController;
 use App\Http\Controllers\Api\V1\RegionController;
 use App\Http\Controllers\Api\V1\RoleController;
 use App\Http\Controllers\Api\V1\ThemeController;
+use App\Http\Controllers\Api\V1\WeddingDataController;
 use App\Http\Controllers\Api\V1\WelcomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -166,5 +167,10 @@ Route::prefix('v1')->name('v1.')->group(function () {
             Route::delete('/', [InvitationController::class, 'delete'])->name('delete');
             Route::post('/restore', [InvitationController::class, 'restore'])->name('restore');
         });
+    });
+
+    // Invitation Routes
+    Route::prefix('/wedding_data')->name('wedding_data.')->middleware('auth:sanctum')->group(function () {
+        Route::put('/couples', [WeddingDataController::class, 'couples'])->name('couples');
     });
 });

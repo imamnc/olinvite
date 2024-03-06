@@ -36,5 +36,7 @@ class DatabaseSeeder extends Seeder
         $invitation->invoice()->create([
             'code' => strtoupper(uniqid('INV-')),
         ]);
+        // Wedding Data
+        $invitation->wedding_data()->create([]);
     }
 }

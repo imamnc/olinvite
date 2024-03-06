@@ -34,4 +34,14 @@ class Invitation extends Authenticatable
     {
         return $this->belongsTo(Theme::class, 'theme_id', 'id');
     }
+
+    /**
+     * Get the wedding_data associated with the Invitation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function wedding_data(): HasOne
+    {
+        return $this->hasOne(WeddingData::class, 'invitation_id', 'id');
+    }
 }

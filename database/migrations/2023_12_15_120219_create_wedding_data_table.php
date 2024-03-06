@@ -16,13 +16,13 @@ return new class extends Migration
             // Invitation ID
             $table->foreignId('invitation_id')->constrained('invitations', 'id')->cascadeOnDelete();
             // Grooms
-            $table->string('groom_name');
+            $table->string('groom_name')->nullable();
             $table->string('groom_birthday')->nullable();
             $table->string('groom_birthplace')->nullable();
             $table->string('groom_father')->nullable();
             $table->string('groom_mother')->nullable();
             // Bride
-            $table->string('bride_name');
+            $table->string('bride_name')->nullable();
             $table->string('bride_birthday')->nullable();
             $table->string('bride_birthplace')->nullable();
             $table->string('bride_father')->nullable();

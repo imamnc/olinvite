@@ -10,6 +10,7 @@ use App\Http\Requests\Invitation\UpdateInvitationRequest;
 use App\Models\Invitation;
 use App\Models\Invoice;
 use App\Models\Theme;
+use App\Models\WeddingData;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -201,7 +202,7 @@ class InvitationController extends Controller
         try {
             $data = [];
             // Main query
-            $query = Invitation::with('invoice', 'theme');
+            $query = Invitation::with('invoice', 'theme', 'wedding_data');
             // Filter by activation
             if (!in_array($request->activation, [null, 'all'])) {
                 $query = $query->where('is_active', ($request->activation == 'active') ? true : false);
@@ -431,6 +432,13 @@ class InvitationController extends Controller
                 'code' => strtoupper(uniqid('INV-')),
                 'amount' => $theme?->price
             ]);
+            if ($theme) {
+                if ($theme->invitation_type->name = 'Wedding Invitation') {
+                    WeddingData::create([
+                        'invitation_id' => $invitation->id
+                    ]);
+                }
+            }
             // Invitation
             $invitation = Invitation::with('invoice')->find($invitation->id);
             DB::commit();
