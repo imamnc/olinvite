@@ -172,5 +172,6 @@ Route::prefix('v1')->name('v1.')->group(function () {
     // Invitation Routes
     Route::prefix('/wedding_data')->name('wedding_data.')->middleware('auth:sanctum')->group(function () {
         Route::put('/couples', [WeddingDataController::class, 'couples'])->name('couples');
+        Route::put('/events', [WeddingDataController::class, 'events'])->name('events');
     });
 });

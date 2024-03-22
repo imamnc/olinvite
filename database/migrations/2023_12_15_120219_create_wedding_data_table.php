@@ -35,14 +35,14 @@ return new class extends Migration
             $table->date('akad_date')->nullable();
             $table->time('akad_start')->nullable();
             $table->time('akad_end')->nullable();
-            $table->time('akad_place')->nullable();
-            $table->time('akad_maps')->nullable();
+            $table->text('akad_place')->nullable();
+            $table->text('akad_maps')->nullable();
             // Reception
             $table->date('reception_date')->nullable();
             $table->time('reception_start')->nullable();
             $table->time('reception_end')->nullable();
-            $table->time('reception_place')->nullable();
-            $table->time('reception_maps')->nullable();
+            $table->text('reception_place')->nullable();
+            $table->text('reception_maps')->nullable();
             // Gift address
             $table->text('gift_address')->nullable();
             // Music
