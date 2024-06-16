@@ -33,18 +33,16 @@ return [
         'root' => [
             'driver' => 'local',
             'root' => base_path(),
-            'throw' => false,
-        ],
-
-        'themes' => [
-            'driver' => 'local',
-            'root' => base_path('resources/views/themes'),
+            'visibility' => 'public',
+            'directory_visibility' => 'public',
             'throw' => false,
         ],
 
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
+            'visibility' => 'public',
+            'directory_visibility' => 'public',
             'throw' => false
         ],
 
@@ -66,6 +64,23 @@ return [
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'throw' => false,
+        ],
+
+        // CUSTOM FILES
+        'themes' => [
+            'driver' => 'local',
+            'root' => base_path('resources/views/themes'),
+            'visibility' => 'public',
+            'directory_visibility' => 'public',
+            'throw' => false,
+        ],
+        'invitations' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/invitation_photos'),
+            'url' => env('APP_URL') . '/storage/invitation_photos',
+            'visibility' => 'public',
+            'directory_visibility' => 'public',
             'throw' => false,
         ],
 

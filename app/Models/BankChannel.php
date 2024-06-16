@@ -16,7 +16,7 @@ class BankChannel extends Model
     // Cast logo attribute
     protected function logo(): Attribute
     {
-        return Attribute::make(get: fn ($value) => $value ? url($value) : null);
+        return Attribute::make(get: fn ($value) => $value ? url($value) : url('img/noimage.jpg'));
     }
 
     /**

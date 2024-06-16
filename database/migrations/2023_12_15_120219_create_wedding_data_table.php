@@ -16,12 +16,14 @@ return new class extends Migration
             // Invitation ID
             $table->foreignId('invitation_id')->constrained('invitations', 'id')->cascadeOnDelete();
             // Grooms
+            $table->string('groom_photo')->nullable();
             $table->string('groom_name')->nullable();
             $table->string('groom_birthday')->nullable();
             $table->string('groom_birthplace')->nullable();
             $table->string('groom_father')->nullable();
             $table->string('groom_mother')->nullable();
             // Bride
+            $table->string('bride_photo')->nullable();
             $table->string('bride_name')->nullable();
             $table->string('bride_birthday')->nullable();
             $table->string('bride_birthplace')->nullable();
@@ -29,6 +31,7 @@ return new class extends Migration
             $table->string('bride_mother')->nullable();
             // Quotes
             $table->text('quotes')->nullable();
+            $table->string('quotes_by')->nullable();
             // Video
             $table->text('youtube_video')->nullable();
             // Akad
@@ -45,9 +48,6 @@ return new class extends Migration
             $table->text('reception_maps')->nullable();
             // Gift address
             $table->text('gift_address')->nullable();
-            // Music
-            $table->foreignId('music_id')->nullable()->constrained('music', 'id')->nullOnDelete();
-            $table->string('custom_music_path')->nullable();
             // Features activation
             $table->boolean('quotes_feature')->default(true);
             $table->boolean('video_feature')->default(true);
@@ -58,7 +58,7 @@ return new class extends Migration
             $table->boolean('wish_feature')->default(true);
             $table->boolean('story_feature')->default(true);
             $table->boolean('music_feature')->default(true);
-            $table->boolean('custom_music_feature')->default(true);
+            $table->boolean('custom_music_feature')->default(false);
             // Timestamps
             $table->timestamps();
         });

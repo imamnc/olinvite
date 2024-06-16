@@ -1,0 +1,640 @@
+/* font-family: 'Montserrat', sans-serif; */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,400;0,500;0,600;1,200;1,400;1,500;1,600&display=swap");
+
+/* font-family: 'Grethania'; */
+@font-face {
+    font-family: "Grethania";
+    src: url("../fonts/grethania.ttf");
+}
+
+/* font-family: 'Darling'; */
+@font-face {
+    font-family: "Darling";
+    src: url("../fonts/darling.ttf");
+}
+
+/* font-family: 'Blantick'; */
+@font-face {
+    font-family: "Blantick";
+    src: url("../fonts/blantick.ttf");
+}
+
+/* font-family: 'Fabulous'; */
+@font-face {
+    font-family: "Fabulous";
+    src: url("../fonts/fabulous.otf");
+}
+
+.font-montserrat {
+    font-family: "Montserrat", sans-serif;
+}
+
+.font-grethania {
+    font-family: "Grethania";
+}
+
+.font-darling {
+    font-family: "Darling";
+}
+
+.font-blantick {
+    font-family: "Darling";
+}
+
+.font-fabulous {
+    font-family: "Fabulous";
+}
+
+a {
+    text-decoration: none;
+}
+
+.bg-theme {
+    background-color: #ee9642;
+    color: #000;
+    font-weight: bold;
+}
+
+.bg-theme:hover {
+    background-color: #ee9642;
+    color: #000;
+    font-weight: bold;
+}
+
+.bg-theme:focus {
+    background-color: #ee9642;
+    color: #000;
+    font-weight: bold;
+}
+
+.text-theme {
+    color: #ee9642;
+}
+
+.no-scroll {
+    overflow: hidden;
+}
+
+.card .card-header {
+    padding: 15px;
+}
+
+.card .card-header .card-title {
+    margin-bottom: 0;
+}
+
+/* ==============================================================================
+ SCROLLBAR
+============================================================================== */
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* ==============================================================================
+ MUSIC TRIGGER
+============================================================================== */
+.music-trigger {
+    position: fixed;
+    z-index: 9999;
+    top: 45%;
+    right: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    background-color: rgba(255, 255, 255, 0.6);
+    font-size: 25px;
+    cursor: pointer;
+}
+
+/* ==============================================================================
+ COVER
+============================================================================== */
+.cover {
+    position: fixed;
+    z-index: 10000;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(https://i.pinimg.com/736x/11/27/04/1127043bed2f746c97bfa3735aaba0e3.jpg);
+}
+
+.cover-content {
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+}
+
+.cover:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to top,
+        transparent 20%,
+        rgba(0, 0, 0, 0.85) 100%
+    );
+}
+
+.cover:after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(0, 0, 0, 0.9) 97%
+    );
+}
+
+.cover h2 {
+    font-size: 25px;
+    color: #fff;
+    /* color: #ee9642; */
+}
+
+.cover .cover-content .couple-title {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: end;
+    padding-bottom: 30px;
+    color: #fff;
+}
+
+.cover .cover-content .couple-title .couple-name {
+    font-size: 48px;
+    border-bottom: solid 2px #fff;
+    margin-bottom: 15px;
+}
+
+.cover .cover-content .couple-title .event-date {
+    font-size: 20px;
+}
+
+/* ==============================================================================
+ NAVIGATION
+============================================================================== */
+.navigation {
+    position: fixed;
+    z-index: 9999;
+    bottom: 15px;
+    right: 15px;
+    left: 15px;
+    display: flex;
+    flex-grow: 1;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.navigation .navigation-item {
+    flex: 1;
+    text-decoration: none;
+    color: #333;
+    padding: 15px 0;
+    text-align: center;
+}
+
+.navigation .navigation-item.active {
+    flex: 2;
+}
+
+.navigation .navigation-item span {
+    display: none;
+}
+
+.navigation .navigation-item.active span {
+    display: inline-block;
+    font-family: "Montserrat";
+    font-size: 12px;
+    font-weight: bolder;
+    margin-left: 10px;
+}
+
+/* ==============================================================================
+ HERO
+============================================================================== */
+.hero {
+    position: relative;
+    height: 100svh;
+    overflow: hidden;
+}
+
+.hero h2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    padding: 20px 10px;
+    text-align: center;
+    color: #fff;
+}
+
+.hero .couple-title {
+    position: absolute;
+    bottom: 100px;
+    left: 0;
+    right: 0;
+    z-index: 11;
+    padding: 10px 10px;
+    color: #fff;
+    text-align: center;
+}
+
+.hero .couple-title .couple-name {
+    font-size: 50px;
+    margin-bottom: 5px;
+}
+
+.hero .couple-title .event-date {
+    font-size: 20px;
+}
+
+.hero:before {
+    content: "";
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to top,
+        transparent 30%,
+        rgba(0, 0, 0, 0.6) 100%
+    );
+}
+
+.hero:after {
+    content: "";
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(0, 0, 0, 1) 100%
+    );
+}
+
+.hero figure {
+    width: 100%;
+    height: 100svh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero figure img {
+    flex: 1;
+    object-fit: cover;
+}
+
+/* ==============================================================================
+ COUPLE
+============================================================================== */
+.couple {
+    padding: 20px;
+    padding-bottom: 100px;
+    background-color: #000;
+}
+
+.couple figure {
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: start;
+    overflow: hidden;
+}
+
+.couple figure img {
+    width: 100%;
+}
+
+/* ==============================================================================
+ QUOTES
+============================================================================== */
+.quotes {
+    padding: 50px 10px;
+    background-color: #131313;
+}
+
+/* ==============================================================================
+ EVENT
+============================================================================== */
+.event {
+    padding: 70px 10px;
+    background-color: #000;
+}
+
+.event .card {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.event .card .card-body {
+    color: #000;
+}
+
+.event h2 {
+    font-size: 40px;
+}
+
+/* ==============================================================================
+ STORY
+============================================================================== */
+.story {
+    background-color: #000;
+    padding-top: 50px;
+    padding-bottom: 100px;
+}
+
+.story h2 {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+.story figure {
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.story figure img {
+    height: 100%;
+}
+
+/* ==============================================================================
+ RSVP
+============================================================================== */
+.rsvp {
+    position: relative;
+    z-index: 1;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(https://i.pinimg.com/736x/11/27/04/1127043bed2f746c97bfa3735aaba0e3.jpg);
+    padding-top: 50px;
+    padding-bottom: 100px;
+    min-height: 50vh;
+}
+
+.rsvp h2 {
+    text-align: center;
+    font-size: 38px;
+    margin-bottom: 30px;
+}
+
+.rsvp:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.rsvp .card {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.rsvp .wish-card {
+    position: relative;
+}
+
+.rsvp .wish-card .card-title {
+    font-family: "darling";
+}
+
+.rsvp .wish-card .card-body {
+    max-height: 60vh;
+    overflow-x: hidden;
+    padding-top: 0;
+    padding-bottom: 50px;
+}
+
+.rsvp .wish-card .wish-chat {
+    min-height: 50vh;
+    padding-bottom: 40px;
+}
+
+.rsvp .wish-card .wish-chat .wish-chat-item {
+    padding-top: 15px;
+    font-family: "montserrat";
+}
+
+.rsvp .wish-card .wish-chat .wish-chat-item .wish-chat-item-content {
+    padding: 15px;
+    background-color: rgba(238, 150, 66, 0.8);
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.rsvp .wish-card::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    left: 5px;
+    right: 5px;
+    height: 90px;
+    background-color: rgba(255, 255, 255, 0.9);
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+}
+
+.rsvp .wish-card .wish-form {
+    position: absolute;
+    z-index: 2;
+    bottom: 20px;
+    right: 10px;
+    left: 10px;
+    display: flex;
+}
+
+.rsvp .wish-card .wish-form textarea {
+    padding: 10px 15px;
+    flex: 1;
+    min-height: 50px;
+    max-height: 150px;
+    border-radius: 30px;
+}
+
+.rsvp .wish-card .wish-form button {
+    width: 50px;
+    height: 50px;
+    border-radius: 30px;
+    margin-left: 10px;
+}
+
+/* ==============================================================================
+ GIFT
+============================================================================== */
+.gift {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    background-color: #000;
+    min-height: 80vh;
+}
+
+.gift h2 {
+    font-size: 40px;
+    padding-bottom: 20px;
+}
+
+.gift .gift-card {
+    display: flex;
+    align-items: center;
+    padding: 25px 20px;
+    background-color: rgba(255, 255, 255, 0.75);
+    border-radius: 10px;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.gift .gift-card img {
+    width: 60px;
+}
+
+.gift .gift-card .gift-content {
+    margin-left: 25px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==============================================================================
+ GALLERY
+============================================================================== */
+
+.gallery {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    background-color: #131313;
+}
+
+.gallery ul {
+    padding: 0;
+}
+
+.gallery h2 {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 40px;
+}
+
+.gallery figure {
+    width: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.gallery figure img {
+    flex: 1;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.viewer-container {
+    z-index: 10001 !important;
+}
+
+.viewer-backdrop {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* ==============================================================================
+ FOOTER
+============================================================================== */
+.footer {
+    padding-top: 40px;
+    padding-bottom: 120px;
+    background-color: #000;
+    color: #fff;
+}
+
+.footer .footer-logo {
+    width: 150px;
+}
+
+/* ==============================================================================
+ LAYOUT
+============================================================================== */
+body {
+    background-image: url(https://banjarbaruklik.com/wp-content/uploads/2019/08/20190706_165330.jpg);
+    background-position: center;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    z-index: 1;
+}
+
+#root {
+    position: relative;
+    z-index: 2;
+}
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    body {
+        display: flex;
+        justify-content: center;
+    }
+    #root {
+        width: 576px;
+    }
+    .navigation {
+        left: 32% !important;
+        right: 32% !important;
+    }
+}

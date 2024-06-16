@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Title -->
+    <title>
+        Olinvite
+    </title>
+    <!-- Style -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/storage/themes/theme1/css/vendor.css" />
+    <link rel="stylesheet" href="/storage/themes/theme1/css/style.css" />
+</head>
+
+<body class="no-scroll">
+    <!-- Main -->
+    <div id="root">
+        <!-- Cover -->
+        <section class="cover" id="cover">
+            <div class="cover-content">
+                <h2 class="font-fabulous text-uppercase">The Wedding Of</h2>
+                <div class="couple-title">
+                    <div class="font-grethania couple-name">
+                        <span>{{ invitation?.wedding_data?.groom_name }}</span>
+                        <span>&</span>
+                        <span>{{ invitation?.wedding_data?.bride_name }}</span>
+                    </div>
+                    <div class="text-fabulous event-date">Selasa, 20 April 2023</div>
+                    <div class="text-montserrat mt-3">
+                        <strong class="text-theme"><i class="fa fa-envelope-open me-2"></i>Kepada :</strong>
+                        <h5 class="text-white mt-2 text-capitalize">{{ guest.name }}</h5>
+                    </div>
+                    <button class="btn bg-theme font-montserrat font-wight-bold mt-3" @click="openCover">
+                        Buka Undangan
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <nav class="navigation" id="navigation">
+            <a href="#hero" class="navigation-item active">
+                <i class="fa fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#couple" class="navigation-item">
+                <i class="fa fa-heart"></i>
+                <span>Couples</span>
+            </a>
+            <a href="#story" class="navigation-item">
+                <i class="fa fa-comment-dots"></i>
+                <span>Story</span>
+            </a>
+            <a href="#event" class="navigation-item">
+                <i class="fa fa-calendar-alt"></i>
+                <span>Agenda</span>
+            </a>
+            <a href="#gallery" class="navigation-item">
+                <i class="fa fa-image"></i>
+                <span>Gallery</span>
+            </a>
+            <a href="#rsvp" class="navigation-item">
+                <i class="fa fa-list"></i>
+                <span>RSVP</span>
+            </a>
+            <a href="#gift" class="navigation-item">
+                <i class="fa fa-gift"></i>
+                <span>Gift</span>
+            </a>
+        </nav>
+
+        <!-- Music Trigger -->
+        <div class="music-trigger" id="music-trigger" @click="music.trigger">
+            <i class="fa fa-compact-disc" :class="{'fa-spin': music.playing.value}"></i>
+        </div>
+
+        <!-- Hero -->
+        <section class="segment hero" id="hero">
+            <h2 class="font-fabulous text-uppercase">The Wedding Of</h2>
+            <div class="couple-title">
+                <div class="font-grethania couple-name">
+                    <span>{{ invitation?.wedding_data?.groom_name }}</span>
+                    <span>&</span>
+                    <span>{{ invitation?.wedding_data?.bride_name }}</span>
+                </div>
+                <div class="font-fabulous event-date">Selasa, 20 April 2023</div>
+            </div>
+            <div id="main-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <figure>
+                            <img src="https://i.pinimg.com/736x/11/27/04/1127043bed2f746c97bfa3735aaba0e3.jpg"
+                                alt="slideshow" />
+                        </figure>
+                    </div>
+                    <div class="carousel-item">
+                        <figure>
+                            <img src="https://i.pinimg.com/originals/5e/21/d8/5e21d8f1d4d6a23a5a3401518ac16fd9.jpg"
+                                alt="slideshow" />
+                        </figure>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Couple -->
+        <section class="segment couple" id="couple">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <!-- Opening Text -->
+                        <p class="font-montserrat text-center text-white mt-5 px-2" data-aos="fade-up">
+                            <strong>Assalamualaikum wr. wb</strong>
+                            <br /><br />
+                            Tuhan telah menciptakan mahluk-Nya secara berpasang-pasangan.
+                            Perkenankanlah kami merangkai kasih sayang yang Tuhan ciptakan
+                            di antara kami :
+                        </p>
+                        <!-- Grooms -->
+                        <div class="text-center mt-5" data-aos="fade-up">
+                            <figure>
+                                <img :src="invitation?.wedding_data?.groom_photo" alt="groom" />
+                            </figure>
+                            <h5 class="font-montserrat text-white">{{ invitation?.wedding_data?.groom_name }}</h5>
+                            <p class="text-theme mb-2">
+                                <i class="fa fa-map-marker-alt me-1"></i>
+                                {{ invitation?.wedding_data?.groom_birthplace }},
+                                {{ utils.dateFormat(invitation?.wedding_data?.groom_birthday, 'DD MMMM YYYY') }}
+                            </p>
+                            <p class="text-white font-montserrat">
+                                Putra pertama Bapak {{ invitation?.wedding_data?.groom_father }} dan Ibu
+                                {{ invitation?.wedding_data?.groom_mother }}
+                            </p>
+                            <div class="sosmed">
+                                <a href="" class="text-secondary px-1">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="" class="text-secondary px-1">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="" class="text-secondary px-1">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- Brides -->
+                        <div class="text-center mt-5" data-aos="fade-up">
+                            <figure>
+                                <img :src="invitation?.wedding_data?.bride_photo" alt="bride" />
+                            </figure>
+                            <h5 class="font-montserrat text-white">{{ invitation?.wedding_data?.bride_name }}</h5>
+                            <p class="text-theme mb-2">
+                                <i class="fa fa-map-marker-alt me-1"></i>
+                                {{ invitation?.wedding_data?.bride_birthplace }},
+                                {{ utils.dateFormat(invitation?.wedding_data?.bride_birthday, 'DD MMMM YYYY') }}
+                            </p>
+                            <p class="text-white font-montserrat">
+                                Putra pertama Bapak {{ invitation?.wedding_data?.bride_father }} dan Ibu {{
+                                invitation?.wedding_data?.bride_mother }}
+                            </p>
+                            <div class="sosmed">
+                                <a href="" class="text-secondary px-1">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="" class="text-secondary px-1">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="" class="text-secondary px-1">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Love Story -->
+        <section class="segment story" id="story">
+            <h2 class="font-grethania text-white text-center" data-aos="fade-up">
+                Our Love Story
+            </h2>
+            <div id="story-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-aos="flip-right">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <figure>
+                            <img src="https://i.pinimg.com/736x/11/27/04/1127043bed2f746c97bfa3735aaba0e3.jpg"
+                                alt="slideshow" />
+                        </figure>
+                        <div class="text-white text-center px-2">
+                            <div class="container">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-8">
+                                        <h5 class="font-fabulous m-0">Bertemu</h5>
+                                        <span class="d-inline-block my-2 text-theme">~ 20 Januari 2018 ~</span>
+                                        <p class="font-montserrat m-0">
+                                            Odit nobis aut cumque voluptates eius molestiae fugit,
+                                            repudiandae earum doloremque, mollitia quis blanditiis.
+                                            Deserunt magnam fuga aspernatur a vel autem ducimus
+                                            nobis repudiandae quibusdam officia.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <figure>
+                            <img src="https://i.pinimg.com/originals/5e/21/d8/5e21d8f1d4d6a23a5a3401518ac16fd9.jpg"
+                                alt="slideshow" />
+                        </figure>
+                        <div class="text-white text-center px-2">
+                            <div class="container">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-8">
+                                        <h5 class="font-fabulous m-0">Kenal</h5>
+                                        <span class="d-inline-block my-2 text-theme">~ 20 Februari 2018 ~</span>
+                                        <p class="font-montserrat m-0">
+                                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                            Ducimus, totam praesentium. Ipsa magnam quia fugit vitae
+                                            enim optio iste nemo cum alias facere? Itaque expedita
+                                            perferendis excepturi iure accusamus ipsa.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quotes -->
+        <section class="quotes" id="quotes">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <!-- Quotes -->
+                        <p class="font-montserrat text-white text-center" data-aos="fade-up">
+                            {{ invitation?.wedding_data?.quotes }}
+                            <br />
+                            <span class="text-theme">- {{ invitation?.wedding_data?.quotes_by }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Event -->
+        <section class="segment event" id="event">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <h2 class="font-grethania text-center text-white" data-aos="fade-up">
+                            Akad
+                        </h2>
+                        <div class="card mb-4" data-aos="flip-right">
+                            <div class="card-body font-montserrat text-center py-5">
+                                <h5>Tanggal :</h5>
+                                <p>
+                                    {{ utils.dateFormat(invitation?.wedding_data?.akad_date, 'dddd, LL') }}
+                                </p>
+                                <h5>Jam :</h5>
+                                <p>
+                                    {{ utils.timeFormat(invitation?.wedding_data?.akad_start) }} WIB -
+                                    {{ utils.timeFormat(invitation?.wedding_data?.akad_end) }} WIB
+                                </p>
+                                <h5>Tempat :</h5>
+                                <p>{{ invitation?.wedding_data?.akad_place }}</p>
+                                <a href="" target="_blank" class="btn bg-theme text-dark mt-3">
+                                    <i class="fa fa-calendar-alt me-1"></i>
+                                    Save The Date
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h2 class="font-grethania text-center text-white" data-aos="fade-up">
+                            Resepsi
+                        </h2>
+                        <div class="card mb-4" data-aos="flip-right">
+                            <div class="card-body font-montserrat text-center py-5">
+                                <h5>Tanggal :</h5>
+                                <p>
+                                    {{ utils.dateFormat(invitation?.wedding_data?.reception_date, 'dddd, LL') }}
+                                </p>
+                                <h5>Jam :</h5>
+                                <p>
+                                    {{ utils.timeFormat(invitation?.wedding_data?.reception_start) }} WIB -
+                                    {{ utils.timeFormat(invitation?.wedding_data?.reception_end) }} WIB
+                                </p>
+                                <h5>Tempat :</h5>
+                                <p>{{ invitation?.wedding_data?.reception_place }}</p>
+                                <a href="" target="_blank" class="btn bg-theme text-dark mt-3">
+                                    <i class="fa fa-calendar-alt me-1"></i>
+                                    Save The Date
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery -->
+        <section class="segment gallery" id="gallery">
+            <h2 class="text-white font-grethania text-center" data-aos="fade-up">
+                Gallery
+            </h2>
+            <div class="container">
+                <ul class="row" id="gallery-box">
+                    <li v-for="glr in galleries" class="figure col-md-4 col-6">
+                        <figure data-aos="fade-up">
+                            <img :src="glr.path" alt="gallery" loading="lazy" />
+                        </figure>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- RSVP -->
+        <section class="segment rsvp" id="rsvp">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <!-- RSVP -->
+                    <div class="col-md-8">
+                        <h2 data-aos="fade-up" class="font-grethania text-white">Konfirmasi Kehadiran</h2>
+                        <div class="confirmation-card card py-3" data-aos="fade-up">
+                            <div class="card-body">
+                                <form method="post" @submit.prevent="sendConfirmation">
+                                    <!-- Name -->
+                                    <div class="form-group mb-3">
+                                        <label for="guest_name"><strong>Tamu</strong></label>
+                                        <input v-model="guest.name" type="text" class="form-control text-capitalize"
+                                            disabled>
+                                    </div>
+                                    <!-- Confirmation -->
+                                    <div class="form-group">
+                                        <label for="confirmation"><strong>Konfirmasi</strong></label>
+                                        <select name="confirmation" id="confirmation" class="form-select mt-2">
+                                            <option value="hadir">Hadir</option>
+                                            <option value="ragu">Ragu-Ragu</option>
+                                            <option value="tidak">Tidak Hadir</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group mt-3 text-center">
+                                        <button type=" submit" class="btn bg-theme">
+                                            <i class="far fa-save me-2"></i>
+                                            Konfirmasi
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- WISH -->
+                    <div class="col-md-8">
+                        <div class="wish-card card pb-3 mt-4" data-aos="fade-up">
+                            <div class="card-header bg-white">
+                                <h5 class="card-title">
+                                    <i class="fa fa-comment-dots me-1 text-theme"></i>
+                                    Kolom Ucapan
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="wish-chat">
+                                    <div v-for="msg in messages" class="wish-chat-item">
+                                        <div class="wish-chat-item-content">
+                                            <strong>
+                                                <i class="fa fa-user-circle me-1"></i>
+                                                {{ msg.name }}
+                                            </strong>
+                                            <p class="mt-2">{{ msg . message }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Form -->
+                                <form method="post" class="wish-form" @submit.prevent="sendMessage">
+                                    <textarea v-model="messageForm.message" name="wish" class="form-control" rows="1"
+                                        required placeholder="Ketikan sesuatu..."></textarea>
+                                    <button type="submit" class="btn bg-theme">
+                                        <i class="fa fa-paper-plane"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gift -->
+        <section class="segment gift" id="gift">
+            <h2 class="font-grethania text-white text-center" data-aos="fade-up">
+                Kirim Gift
+            </h2>
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div v-for="gft in gifts" class="gift-card">
+                            <img :src="gft.bank_channel.logo" alt="gift-channel">
+                            <div class="gift-content">
+                                <strong>{{ gft.name }}</strong>
+                                <span>{{ gft.number }}</span>
+                            </div>
+                            <button class="btn btn-light" @click="copyText(gft.number)">
+                                <i class="fa fa-copy text-secondary"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer" id="footer">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-6 text-center">
+                        <p class="fw-bold mb-3">Powered By</p>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Service_mark.svg/2560px-Service_mark.svg.png"
+                            alt="footer-logo" class="footer-logo" />
+                        <small class="font-montserrat d-block mt-3">Your web invitation solution</small>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Script JS -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="/storage/themes/theme1/js/vendor.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment-with-locales.min.js"></script>
+    <script src="/storage/themes/theme1/js/utils.js"></script>
+    <script src="/storage/themes/theme1/js/app.js"></script>
+</body>
+
+</html>

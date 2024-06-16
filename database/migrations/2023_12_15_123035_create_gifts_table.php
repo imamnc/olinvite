@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('gifts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('invitation_id')->constrained('invitations', 'id')->cascadeOnDelete();
             $table->foreignId('gift_channel_id')->nullable()->constrained('gift_channels', 'id')->nullOnDelete();
             $table->string('account_name');
             $table->string('account_number');

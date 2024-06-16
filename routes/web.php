@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PublicController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -18,3 +19,5 @@ use Illuminate\Support\Facades\Storage;
 Route::get('/', function (Request $request) {
     return redirect('api');
 });
+
+Route::fallback([PublicController::class, 'invitation']);
