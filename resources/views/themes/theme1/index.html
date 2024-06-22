@@ -27,14 +27,14 @@
                 <h2 class="font-fabulous text-uppercase">The Wedding Of</h2>
                 <div class="couple-title">
                     <div class="font-grethania couple-name">
-                        <span>{{ invitation?.wedding_data?.groom_name }}</span>
+                        <span>{{ invitation?.wedding_data?.groom_nickname }}</span>
                         <span>&</span>
-                        <span>{{ invitation?.wedding_data?.bride_name }}</span>
+                        <span>{{ invitation?.wedding_data?.bride_nickname }}</span>
                     </div>
                     <div class="text-fabulous event-date">Selasa, 20 April 2023</div>
                     <div class="text-montserrat mt-3">
                         <strong class="text-theme"><i class="fa fa-envelope-open me-2"></i>Kepada :</strong>
-                        <h5 class="text-white mt-2 text-capitalize">{{ guest.name }}</h5>
+                        <h5 class="text-white mt-2 text-capitalize">{{ guest?.name }}</h5>
                     </div>
                     <button class="btn bg-theme font-montserrat font-wight-bold mt-3" @click="openCover">
                         Buka Undangan
@@ -53,30 +53,31 @@
                 <i class="fa fa-heart"></i>
                 <span>Couples</span>
             </a>
-            <a href="#story" class="navigation-item">
+            <a v-if="features.story_feature" href="#story" class="navigation-item">
                 <i class="fa fa-comment-dots"></i>
                 <span>Story</span>
             </a>
-            <a href="#event" class="navigation-item">
+            <a v-if="features.akad_feature || features.reception_feature" href="#event" class="navigation-item">
                 <i class="fa fa-calendar-alt"></i>
                 <span>Agenda</span>
             </a>
-            <a href="#gallery" class="navigation-item">
+            <a v-if="features.gallery_feature" href="#gallery" class="navigation-item">
                 <i class="fa fa-image"></i>
                 <span>Gallery</span>
             </a>
-            <a href="#rsvp" class="navigation-item">
+            <a v-if="features.rsvp_feature" href="#rsvp" class="navigation-item">
                 <i class="fa fa-list"></i>
                 <span>RSVP</span>
             </a>
-            <a href="#gift" class="navigation-item">
+            <a v-if="features.gift_feature" href="#gift" class="navigation-item">
                 <i class="fa fa-gift"></i>
                 <span>Gift</span>
             </a>
         </nav>
 
         <!-- Music Trigger -->
-        <div class="music-trigger" id="music-trigger" @click="music.trigger">
+        <div v-if="features.music_feature || features.custom_music_feature" @click="music.trigger" class="music-trigger"
+            id="music-trigger">
             <i class="fa fa-compact-disc" :class="{'fa-spin': music.playing.value}"></i>
         </div>
 
@@ -85,24 +86,18 @@
             <h2 class="font-fabulous text-uppercase">The Wedding Of</h2>
             <div class="couple-title">
                 <div class="font-grethania couple-name">
-                    <span>{{ invitation?.wedding_data?.groom_name }}</span>
+                    <span>{{ invitation?.wedding_data?.groom_nickname }}</span>
                     <span>&</span>
-                    <span>{{ invitation?.wedding_data?.bride_name }}</span>
+                    <span>{{ invitation?.wedding_data?.bride_nickname }}</span>
                 </div>
                 <div class="font-fabulous event-date">Selasa, 20 April 2023</div>
             </div>
             <div id="main-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
+                    <div v-for="(img, index) in custom_field?.main_slider" class="carousel-item"
+                        :class="{active: index == 0}">
                         <figure>
-                            <img src="https://i.pinimg.com/736x/11/27/04/1127043bed2f746c97bfa3735aaba0e3.jpg"
-                                alt="slideshow" />
-                        </figure>
-                    </div>
-                    <div class="carousel-item">
-                        <figure>
-                            <img src="https://i.pinimg.com/originals/5e/21/d8/5e21d8f1d4d6a23a5a3401518ac16fd9.jpg"
-                                alt="slideshow" />
+                            <img :src="img" alt="slideshow" />
                         </figure>
                     </div>
                 </div>
@@ -181,52 +176,63 @@
             </div>
         </section>
 
+        <!-- Countdown -->
+        <section class="segment countdown" id="countdown">
+            <h2 class="text-white font-grethania text-center" data-aos="fade-up">
+                Menuju Hari Bahagia
+            </h2>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-10">
+                        <div class="countdown-widget">
+                            <div class="counter">
+                                <span>{{ countdown?.day }}</span>
+                                <span class="ms-2 font-darling">Hari</span>
+                            </div>
+                            <div class="counter">
+                                <span>{{ countdown?.hour }}</span>
+                                <span class="ms-2 font-darling">Jam</span>
+                            </div>
+                            <div class="counter">
+                                <span>{{ countdown?.minute }}</span>
+                                <span class="ms-2 font-darling">Menit</span>
+                            </div>
+                            <div class="counter">
+                                <span>{{ countdown?.second }}</span>
+                                <span class="ms-2 font-darling">Detik</span>
+                            </div>
+                        </div>
+                        <div class="text-center mt-4">
+                            <a href="" target="_blank" class="btn bg-theme">
+                                <i class="fa fa-calendar-alt me-1"></i>
+                                Simpan Tanggal
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Love Story -->
-        <section class="segment story" id="story">
+        <section v-if="features.story_feature" class="segment story" id="story">
             <h2 class="font-grethania text-white text-center" data-aos="fade-up">
                 Our Love Story
             </h2>
             <div id="story-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-aos="flip-right">
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
+                    <div v-for="(str, index) in stories" class="carousel-item" :class="{active: index == 0}">
                         <figure>
-                            <img src="https://i.pinimg.com/736x/11/27/04/1127043bed2f746c97bfa3735aaba0e3.jpg"
-                                alt="slideshow" />
+                            <img :src="str.picture_path" alt="slideshow" />
                         </figure>
                         <div class="text-white text-center px-2">
                             <div class="container">
                                 <div class="row justify-content-center">
                                     <div class="col-md-8">
-                                        <h5 class="font-fabulous m-0">Bertemu</h5>
-                                        <span class="d-inline-block my-2 text-theme">~ 20 Januari 2018 ~</span>
-                                        <p class="font-montserrat m-0">
-                                            Odit nobis aut cumque voluptates eius molestiae fugit,
-                                            repudiandae earum doloremque, mollitia quis blanditiis.
-                                            Deserunt magnam fuga aspernatur a vel autem ducimus
-                                            nobis repudiandae quibusdam officia.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <figure>
-                            <img src="https://i.pinimg.com/originals/5e/21/d8/5e21d8f1d4d6a23a5a3401518ac16fd9.jpg"
-                                alt="slideshow" />
-                        </figure>
-                        <div class="text-white text-center px-2">
-                            <div class="container">
-                                <div class="row justify-content-center">
-                                    <div class="col-md-8">
-                                        <h5 class="font-fabulous m-0">Kenal</h5>
-                                        <span class="d-inline-block my-2 text-theme">~ 20 Februari 2018 ~</span>
-                                        <p class="font-montserrat m-0">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                            Ducimus, totam praesentium. Ipsa magnam quia fugit vitae
-                                            enim optio iste nemo cum alias facere? Itaque expedita
-                                            perferendis excepturi iure accusamus ipsa.
-                                        </p>
+                                        <h5 class="font-fabulous m-0">{{ str.title }}</h5>
+                                        <span class="d-inline-block my-2 text-theme">
+                                            ~ {{ utils.dateFormat(str.story_date) }} ~
+                                        </span>
+                                        <p class="font-montserrat m-0">{{ str.description }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -237,7 +243,7 @@
         </section>
 
         <!-- Quotes -->
-        <section class="quotes" id="quotes">
+        <section v-if="features.quotes_feature" class="quotes" id="quotes">
             <div class="container-fluid">
                 <div class="row justify-content-center">
                     <div class="col-md-8">
@@ -256,7 +262,8 @@
         <section class="segment event" id="event">
             <div class="container-fluid">
                 <div class="row justify-content-center">
-                    <div class="col-md-8">
+                    <!-- Akad -->
+                    <div v-if="features.akad_feature" class="col-md-8">
                         <h2 class="font-grethania text-center text-white" data-aos="fade-up">
                             Akad
                         </h2>
@@ -280,7 +287,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-8">
+                    <!-- Resepsi -->
+                    <div v-if="features.reception_feature" class="col-md-8">
                         <h2 class="font-grethania text-center text-white" data-aos="fade-up">
                             Resepsi
                         </h2>
@@ -309,7 +317,7 @@
         </section>
 
         <!-- Gallery -->
-        <section class="segment gallery" id="gallery">
+        <section v-if="features.gallery_feature" class="segment gallery" id="gallery">
             <h2 class="text-white font-grethania text-center" data-aos="fade-up">
                 Gallery
             </h2>
@@ -324,12 +332,27 @@
             </div>
         </section>
 
+        <!-- Video -->
+        <section v-if="features.video_feature" class="segment video" id="video">
+            <h2 class="text-white font-grethania text-center" data-aos="fade-up">
+                Our Video
+            </h2>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-10">
+                        <iframe src="https://www.youtube.com/embed/y4bSFu5DySE" frameborder="0"
+                            allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- RSVP -->
         <section class="segment rsvp" id="rsvp">
             <div class="container-fluid">
                 <div class="row justify-content-center">
                     <!-- RSVP -->
-                    <div class="col-md-8">
+                    <div v-if="features.rsvp_feature" class="col-md-8">
                         <h2 data-aos="fade-up" class="font-grethania text-white">Konfirmasi Kehadiran</h2>
                         <div class="confirmation-card card py-3" data-aos="fade-up">
                             <div class="card-body">
@@ -337,7 +360,7 @@
                                     <!-- Name -->
                                     <div class="form-group mb-3">
                                         <label for="guest_name"><strong>Tamu</strong></label>
-                                        <input v-model="guest.name" type="text" class="form-control text-capitalize"
+                                        <input :value="guest?.name" type="text" class="form-control text-capitalize"
                                             disabled>
                                     </div>
                                     <!-- Confirmation -->
@@ -360,7 +383,7 @@
                         </div>
                     </div>
                     <!-- WISH -->
-                    <div class="col-md-8">
+                    <div v-if="features.wish_feature" class="col-md-8">
                         <div class="wish-card card pb-3 mt-4" data-aos="fade-up">
                             <div class="card-header bg-white">
                                 <h5 class="card-title">
@@ -370,19 +393,19 @@
                             </div>
                             <div class="card-body">
                                 <div class="wish-chat">
-                                    <div v-for="msg in messages" class="wish-chat-item">
+                                    <div v-for="wish in wishes" class="wish-chat-item">
                                         <div class="wish-chat-item-content">
                                             <strong>
                                                 <i class="fa fa-user-circle me-1"></i>
-                                                {{ msg.name }}
+                                                {{ wish.name }}
                                             </strong>
-                                            <p class="mt-2">{{ msg . message }}</p>
+                                            <p class="mt-2">{{ wish . message }}</p>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Form -->
-                                <form method="post" class="wish-form" @submit.prevent="sendMessage">
-                                    <textarea v-model="messageForm.message" name="wish" class="form-control" rows="1"
+                                <form method="post" class="wish-form" @submit.prevent="sendWish">
+                                    <textarea v-model="wishForm.message" name="wish" class="form-control" rows="1"
                                         required placeholder="Ketikan sesuatu..."></textarea>
                                     <button type="submit" class="btn bg-theme">
                                         <i class="fa fa-paper-plane"></i>
@@ -396,7 +419,7 @@
         </section>
 
         <!-- Gift -->
-        <section class="segment gift" id="gift">
+        <section v-if="features.gift_feature" class="segment gift" id="gift">
             <h2 class="font-grethania text-white text-center" data-aos="fade-up">
                 Kirim Gift
             </h2>
@@ -409,7 +432,7 @@
                                 <strong>{{ gft.name }}</strong>
                                 <span>{{ gft.number }}</span>
                             </div>
-                            <button class="btn btn-light" @click="copyText(gft.number)">
+                            <button class="btn btn-light" @click="utils.copyText(gft.number)">
                                 <i class="fa fa-copy text-secondary"></i>
                             </button>
                         </div>

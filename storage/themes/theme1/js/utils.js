@@ -1,6 +1,9 @@
 /*========================================================
  TOOLS METHOD
 ========================================================*/
+/* DATA */
+const momentLocale = "id";
+
 /* TOOLS */
 const tools = {
     // Open cover
@@ -20,36 +23,36 @@ const tools = {
         }
         return response;
     },
-    // Get messages
-    getMessages: async () => {
-        try {
-            var message_path = "/storage/theme/assets/theme1/wish.json";
-            var response = await axios.get(message_path);
-        } catch (error) {
-            var response = error;
-        }
-        return response;
-    },
     // Get datetime
     dateTime: (datetime = null) => {
         if (datetime) {
-            return moment(datetime).format("YYYY-MM-DD HH:mm:ss");
+            return moment(datetime)
+                .locale(momentLocale)
+                .format("YYYY-MM-DD HH:mm:ss");
         } else {
-            return moment().format("YYYY-MM-DD HH:mm:ss");
+            return moment().locale(momentLocale).format("YYYY-MM-DD HH:mm:ss");
         }
     },
     // Get date
     date: (date = null) => {
         if (date) {
-            return moment(date).format("YYYY-MM-DD");
+            return moment(date).locale(momentLocale).format("YYYY-MM-DD");
         } else {
-            return moment().format("YYYY-MM-DD");
+            return moment().locale(momentLocale).format("YYYY-MM-DD");
         }
     },
     // Get date
     dateFormat: (date = null, format = "YYYY-MM-DD") => {
         if (date) {
-            return moment(date).format(format);
+            return moment(date).locale(momentLocale).format(format);
+        } else {
+            return null;
+        }
+    },
+    // Get time
+    timeFormat: (date = null, format = "HH:mm") => {
+        if (date) {
+            return moment(date, "HH:mm:ss").locale(momentLocale).format(format);
         } else {
             return null;
         }
@@ -68,6 +71,37 @@ const tools = {
             toast: true,
             timer: 2000,
         });
+    },
+    // Counting down date string
+    countingDown: (date) => {
+        return new Promise((resolve, reject) => {
+            // Set the date we're counting down to
+            var countDownDate = new Date(date).getTime();
+            // Get today's date and time
+            var now = new Date().getTime();
+            // Find the distance between now and the count down date
+            var distance = countDownDate - now;
+            // Set response
+            var response = {
+                distance: distance,
+                day: Math.floor(distance / (1000 * 60 * 60 * 24)),
+                hour: Math.floor(
+                    (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+                ),
+                minute: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+                second: Math.floor((distance % (1000 * 60)) / 1000),
+            };
+            resolve(response);
+        });
+    },
+    copyText: async (text) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            tools.toast("success", "Rekening telah disalin");
+        } catch (err) {
+            console.error("Failed to copy: ", err);
+            tools.toast("error", "Gagal menyalin rekening !");
+        }
     },
 };
 
@@ -129,7 +163,7 @@ const page = {
             max: 9999,
         });
         integerel.forEach((el) => {
-            numberformatmask.mask(el);
+            integermask.mask(el);
         });
 
         // Activate (Mask) Decimal
@@ -140,7 +174,7 @@ const page = {
             digits: 2,
         });
         decimalel.forEach((el) => {
-            numberformatmask.mask(el);
+            decimalmask.mask(el);
         });
 
         // Activate (Mask) Phone
@@ -150,11 +184,13 @@ const page = {
             placeholder: "",
         });
         phoneel.forEach((el) => {
-            numberformatmask.mask(el);
+            phonemask.mask(el);
         });
     },
     initGallery: () => {
-        new Viewer(document.getElementById("gallery-box"));
+        if (document.getElementById("gallery-box")) {
+            new Viewer(document.getElementById("gallery-box"));
+        }
     },
     initScrollSpy: () => {
         const navLinks = document.querySelectorAll(".navigation-item");
@@ -201,14 +237,18 @@ const page = {
     },
     initCarousel: () => {
         /* Main Carousel */
-        const main_carousel = new bootstrap.Carousel("#main-carousel", {
-            interval: 3000,
-        });
+        if (document.getElementById("main-carousel")) {
+            new bootstrap.Carousel("#main-carousel", {
+                interval: 3000,
+            });
+        }
 
         /* Story Carousel */
-        const story_carousel = new bootstrap.Carousel("#story-carousel", {
-            interval: 3000,
-        });
+        if (document.getElementById("story-carousel")) {
+            new bootstrap.Carousel("#story-carousel", {
+                interval: 3000,
+            });
+        }
     },
 };
 

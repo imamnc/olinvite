@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             InvitationTypeSeeder::class,
+            FormTypeSeeder::class,
             ThemeSeeder::class,
             BankChannelSeeder::class,
             MusicSeeder::class,

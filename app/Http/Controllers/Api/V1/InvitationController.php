@@ -29,6 +29,12 @@ class InvitationController extends Controller
      *         description="To get sepesific data by ID",
      *         required=false,
      *     ),
+     *		@OA\Parameter(
+     *         name="prefix_route",
+     *         in="query",
+     *         description="To get sepesific data by prefix route",
+     *         required=false,
+     *     ),
      *     @OA\Parameter(
      *         name="page",
      *         in="query",
@@ -202,7 +208,7 @@ class InvitationController extends Controller
         try {
             $data = [];
             // Main query
-            $query = Invitation::with('invoice', 'theme', 'wedding_data');
+            $query = Invitation::with('invoice', 'theme', 'wedding_data', 'music', 'whises');
             // Filter by activation
             if (!in_array($request->activation, [null, 'all'])) {
                 $query = $query->where('is_active', ($request->activation == 'active') ? true : false);
@@ -210,6 +216,8 @@ class InvitationController extends Controller
             // Continue filtering query
             if ($request->id) {
                 $data['invitation'] = $query->where('id', $request->id)->first();
+            } else if ($request->prefix_route) {
+                $data['invitation'] = $query->where('prefix_route', $request->prefix_route)->first();
             } else {
                 if ($request->search) {
                     $query = $query->where('customer_name', 'LIKE', "%$request->search%")
@@ -656,7 +664,7 @@ class InvitationController extends Controller
     /**
      * @OA\ Get(
      *     path="/invitation/check_prefix_route",
-     *     summary="Get invitation data",
+     *     summary="Check availability of invitation route prefix",
      *     tags={"Invitations"},
      *	   @OA\Parameter(
      *         name="prefix_route",

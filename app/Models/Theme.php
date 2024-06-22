@@ -13,7 +13,7 @@ class Theme extends Model
 {
     use HasFactory, SoftDeletes;
     protected $guarded = [];
-    protected $with = ['invitation_type'];
+    protected $with = ['invitation_type', 'custom_forms'];
 
     // Cast thumbnails attribute
     protected function thumbnails(): Attribute
@@ -39,5 +39,15 @@ class Theme extends Model
     public function invitations(): HasMany
     {
         return $this->hasMany(Invitation::class, 'theme_id', 'id');
+    }
+
+    /**
+     * Get all of the custom_forms for the Theme
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function custom_forms(): HasMany
+    {
+        return $this->hasMany(CustomForm::class, 'theme_id', 'id');
     }
 }

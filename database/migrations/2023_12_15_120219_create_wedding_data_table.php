@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('invitation_id')->constrained('invitations', 'id')->cascadeOnDelete();
             // Grooms
             $table->string('groom_photo')->nullable();
+            $table->string('groom_nickname')->nullable();
             $table->string('groom_name')->nullable();
             $table->string('groom_birthday')->nullable();
             $table->string('groom_birthplace')->nullable();
@@ -24,11 +25,14 @@ return new class extends Migration
             $table->string('groom_mother')->nullable();
             // Bride
             $table->string('bride_photo')->nullable();
+            $table->string('bride_nickname')->nullable();
             $table->string('bride_name')->nullable();
             $table->string('bride_birthday')->nullable();
             $table->string('bride_birthplace')->nullable();
             $table->string('bride_father')->nullable();
             $table->string('bride_mother')->nullable();
+            // Countdown
+            $table->timestamp('countdown_date')->nullable();
             // Quotes
             $table->text('quotes')->nullable();
             $table->string('quotes_by')->nullable();
@@ -48,6 +52,8 @@ return new class extends Migration
             $table->text('reception_maps')->nullable();
             // Gift address
             $table->text('gift_address')->nullable();
+            // To save custom fields as json
+            $table->json('custom_field')->nullable();
             // Features activation
             $table->boolean('quotes_feature')->default(true);
             $table->boolean('video_feature')->default(true);
@@ -56,7 +62,9 @@ return new class extends Migration
             $table->boolean('gift_feature')->default(true);
             $table->boolean('gallery_feature')->default(true);
             $table->boolean('wish_feature')->default(true);
+            $table->boolean('rsvp_feature')->default(true);
             $table->boolean('story_feature')->default(true);
+            $table->boolean('countdown_feature')->default(true);
             $table->boolean('music_feature')->default(true);
             $table->boolean('custom_music_feature')->default(false);
             // Timestamps

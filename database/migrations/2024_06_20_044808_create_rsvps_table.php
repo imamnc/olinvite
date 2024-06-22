@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('wishes', function (Blueprint $table) {
+        Schema::create('rsvps', function (Blueprint $table) {
             $table->id();
             $table->foreignId('invitation_id')->constrained('invitations', 'id')->cascadeOnDelete();
-            $table->foreignId('guest_id')->nullable()->constrained('guests', 'id')->cascadeOnDelete();
-            $table->string('name');
-            $table->text('wish_text');
+            $table->foreignId('guest_id')->constrained('guests', 'id')->cascadeOnDelete();
+            $table->enum('rsvp', ['hadir', 'tidak', 'ragu']);
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('wishes');
+        Schema::dropIfExists('rsvps');
     }
 };

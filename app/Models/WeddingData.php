@@ -26,6 +26,12 @@ class WeddingData extends Model
         return Attribute::make(get: fn ($value) => $value ? url($value) : url('img/noimage.jpg'));
     }
 
+    // Cast custom field
+    protected function customField(): Attribute
+    {
+        return Attribute::make(get: fn ($value) => $value ? json_decode($value) : null);
+    }
+
     /**
      * Get the invitation that owns the WeddingData
      *

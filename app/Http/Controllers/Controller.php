@@ -92,6 +92,10 @@ class Controller extends BaseController
      *     description="API Endpoints Group of Invitations"
      * )
      * @OA\Tag(
+     *     name="Guests",
+     *     description="API Endpoints Group of Invitation Guests"
+     * )
+     * @OA\Tag(
      *     name="Wedding Data",
      *     description="API Endpoints Group of Wedding Data"
      * )

@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Invitation;
 use App\Models\Story;
+use App\Models\Theme;
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -31,20 +33,31 @@ class InvitationSeeder extends Seeder
             'is_active' => true,
             'is_published' => true
         ]);
+        // Create custom fields
+        $theme = Theme::find(1);
+        $custom_forms = $theme->custom_forms;
+        $custom_fields = [];
+        foreach ($custom_forms as $cform) {
+            $custom_fields[$cform->key_name] = ($cform->form_type_id != 4) ? null : [];
+        }
         // Wedding Data
         $invitation->wedding_data()->create([
             // Groom
-            'groom_name' => 'Romeo',
+            'groom_nickname' => 'Romeo',
+            'groom_name' => 'Romeo Ramos',
             'groom_birthplace' => 'Gresik',
             'groom_birthday' => '1999-09-25',
             'groom_father' => 'Steve Rogers',
             'groom_mother' => 'Gamora',
             // Bride
-            'bride_name' => 'Juliet',
+            'bride_nickname' => 'Juliet',
+            'bride_name' => 'Juliet Rose',
             'bride_birthplace' => 'Surabaya',
             'bride_birthday' => '1999-07-15',
             'bride_father' => 'Tony Stark',
             'bride_mother' => 'Wanda',
+            // Countdown date
+            'countdown_date' => Carbon::now()->addDay(10),
             // Quotes
             'quotes' => 'Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan
             pasangan-pasangan untukmu dari jenismu sendiri, agar kamu
@@ -69,6 +82,16 @@ class InvitationSeeder extends Seeder
             'reception_maps' => '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.574626985207!2d112.67314837422656!3d-7.2891413927182676!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7fc364741c0c3%3A0xba3176bca0f4205a!2sPakuwon%20Mall%20Surabaya!5e0!3m2!1sid!2sid!4v1713258031518!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',
             // Gift Address
             'gift_address' => 'Jl. Raya Pasar Menganti No 199, Gresik',
+            // Custom Fields
+            'custom_field' => json_encode($custom_fields)
+        ]);
+
+        // Seed guests
+        $invitation->guests()->create([
+            'name' => 'John Doe',
+            'link_name' => strtolower('John Doe'),
+            'email' => 'johndoe@mail.com',
+            'phone' => '+6285735692331',
         ]);
 
         // Delete all invitations files
@@ -89,20 +112,37 @@ class InvitationSeeder extends Seeder
         // Seed gallery & story
         $gallery_photos = Storage::disk('root')->allFiles('/storage/seeders/weddinggallery');
         foreach ($gallery_photos as $key => $source) {
-            $target1 = str_replace('storage/seeders/weddinggallery', "storage/app/public/invitations/$invitation->id", $source);
-            $target2 = str_replace('storage/seeders/weddinggallery', "storage/invitations/$invitation->id", $source);
-            Storage::disk('root')->copy($source, $target1);
+            $target = str_replace('storage/seeders/weddinggallery', "storage/app/public/invitations/$invitation->id", $source);
+            $path = str_replace('storage/seeders/weddinggallery', "storage/invitations/$invitation->id", $source);
+            if ($key == 2) {
+                $custom_fields['image_cover'][] = url($path);
+            }
+            if ($key <= 3) {
+                $custom_fields['main_slider'][] = url($path);
+            }
+            if ($key == 3) {
+                $custom_fields['invitation_background'] = url($path);
+            }
+            if ($key == 1) {
+                $custom_fields['wish_background'] = url($path);
+            }
+            Storage::disk('root')->copy($source, $target);
             $invitation->wedding_data->galleries()->create([
-                'path' => $target2,
+                'path' => $path,
                 'sort' => ($key + 1)
             ]);
             $invitation->wedding_data->stories()->create([
-                'picture_path' => $target2,
+                'picture_path' => $path,
                 'story_date' => fake()->date(),
                 'title' => fake()->sentence(2),
                 'description' => fake()->sentence(20)
             ]);
         }
+
+        // Update wedding data
+        $invitation->wedding_data()->update([
+            'custom_field' => json_encode($custom_fields),
+        ]);
 
         // Seed gifts
         for ($i = 1; $i <= 3; $i++) {

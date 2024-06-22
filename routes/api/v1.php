@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AuthenticationController;
 use App\Http\Controllers\Api\V1\BankChannelController;
+use App\Http\Controllers\Api\V1\GuestController;
 use App\Http\Controllers\Api\V1\InvitationController;
 use App\Http\Controllers\Api\V1\InvitationTypeController;
 use App\Http\Controllers\Api\V1\MusicController;
@@ -169,7 +170,12 @@ Route::prefix('v1')->name('v1.')->group(function () {
         });
     });
 
-    // Invitation Routes
+    // Guest Routes
+    Route::prefix('/guest')->name('guest.')->group(function () {
+        Route::get('/', [GuestController::class, 'get'])->name('get');
+    });
+
+    // Wedding Data Routes
     Route::prefix('/wedding_data')->name('wedding_data.')->middleware('auth:sanctum')->group(function () {
         Route::put('/couples', [WeddingDataController::class, 'couples'])->name('couples');
         Route::put('/events', [WeddingDataController::class, 'events'])->name('events');

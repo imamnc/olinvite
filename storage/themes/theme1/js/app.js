@@ -3,60 +3,66 @@ const { createApp, ref, reactive, onMounted } = Vue;
 createApp({
     setup() {
         // Import tools
-        const utils = tools;
+        const utils = reactive(tools);
+
+        // Theme tools
+        const theme = {
+            setImageCover: () => {
+                if (custom_field.value.image_cover) {
+                    document.getElementById(
+                        "cover"
+                    ).style.backgroundImage = `url(${custom_field.value.image_cover})`;
+                }
+            },
+            setInvitationBackground: () => {
+                if (custom_field.value.invitation_background) {
+                    document.body.style.backgroundImage = `url(${custom_field.value.invitation_background})`;
+                }
+            },
+            setWishBackground: () => {
+                if (custom_field.value.wish_background) {
+                    document.getElementById(
+                        "rsvp"
+                    ).style.backgroundImage = `url(${custom_field.value.wish_background})`;
+                }
+            },
+        };
 
         // Recipient data
-        const guest = reactive({
-            id: 1,
-            name: "Kacoon",
-            phone: "+6285735692321",
-        });
-
+        const guest = ref(null);
         // Invitation data
         const invitation = ref(null);
-
-        // Messages data
-        const messages = ref([]);
-
+        // Carousels data
+        const carousels = ref([]);
+        // Stories data
+        const stories = ref([]);
         // Galleries data
-        const galleries = ref([
-            "https://i.pinimg.com/originals/cf/76/6d/cf766d99e48b76c954401fa548b40cf4.jpg",
-            "https://i0.wp.com/heikamu.com/wp-content/uploads/2021/02/Pre-Wedding-Casual-Photo-by-Ella-Nofia-Ramadiyanti-on.jpg?ssl=1",
-            "https://i.pinimg.com/736x/5e/21/d8/5e21d8f1d4d6a23a5a3401518ac16fd9.jpg",
-            "https://i.pinimg.com/originals/11/27/04/1127043bed2f746c97bfa3735aaba0e3.jpg",
-            "https://i.pinimg.com/originals/89/51/b5/8951b50361de315d0c8cb0cdb0aad3b8.jpg",
-        ]);
-
+        const galleries = ref([]);
+        // Messages data
+        const wishes = ref([]);
         // Gifts data
-        const gifts = ref([
-            {
-                bank_thumbnails:
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/2560px-Bank_Central_Asia.svg.png",
-                bank: "bca",
-                name: "Imam Nurcholis",
-                number: "00188277182992",
-            },
-            {
-                bank_thumbnails:
-                    "https://upload.wikimedia.org/wikipedia/id/thumb/5/55/BNI_logo.svg/2560px-BNI_logo.svg.png",
-                bank: "bni",
-                name: "Kacoon",
-                number: "71788277199203",
-            },
-            {
-                bank_thumbnails:
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Bank_Mandiri_logo_2016.svg/2560px-Bank_Mandiri_logo_2016.svg.png",
-                bank: "mandiri",
-                name: "Imam Nurcholis",
-                number: "01092837726111",
-            },
-        ]);
+        const gifts = ref([]);
+        // Cusrom field
+        const custom_field = ref(null);
+
+        // Features
+        const features = reactive({
+            quotes_feature: false,
+            video_feature: false,
+            akad_feature: false,
+            reception_feature: false,
+            gift_feature: false,
+            gallery_feature: false,
+            wish_feature: false,
+            rsvp_feature: false,
+            story_feature: false,
+            music_feature: false,
+            custom_music_feature: false,
+        });
 
         // Music
         const music = {
-            instance: new Audio(
-                "/storage/theme/assets/theme1/sound/default.mp3"
-            ),
+            instance: null,
             playing: ref(false),
             start: () => {
                 music.instance.play();
@@ -85,7 +91,42 @@ createApp({
                     music.resume();
                 }
             },
+            init: () => {
+                if (features.music_feature == true) {
+                    music.instance = new Audio(
+                        invitation.value?.music?.file_path
+                    );
+                } else if (features.custom_music_feature == true) {
+                    music.instance = new Audio(
+                        invitation.value?.custom_music_path
+                    );
+                }
+            },
         };
+
+        // Countdown
+        const countdown = reactive({
+            day: 0,
+            hour: 0,
+            minute: 0,
+            second: 0,
+            counter: null,
+            start: () => {
+                countdown.counter = setInterval(async () => {
+                    var response = await utils.countingDown(
+                        invitation.value.wedding_data.countdown_date
+                    );
+                    if (response.distance >= 0) {
+                        countdown.day = response.day;
+                        countdown.hour = response.hour;
+                        countdown.minute = response.minute;
+                        countdown.second = response.second;
+                    } else {
+                        clearInterval(countdown.counter);
+                    }
+                }, 1000);
+            },
+        });
 
         // Open cover
         const openCover = () => {
@@ -93,33 +134,19 @@ createApp({
             music.start();
         };
 
-        // Get invitation
-        const loadInvitation = async () => {
-            var result = await utils.getInvitation();
-            invitation.value = result.data.data.invitation;
-            guest.name = result.data.data.guest;
-            console.log(invitation.value);
-        };
-
-        // Get messages
-        const loadMessages = async () => {
-            var result = await utils.getMessages();
-            messages.value = result.data;
-        };
-
-        // Send message
-        const messageForm = reactive({
-            name: guest.name,
+        // Wish
+        const wishForm = reactive({
+            name: guest?.name,
             message: null,
             time: utils.dateTime(),
         });
-        const sendMessage = async () => {
-            messageForm.time = utils.dateTime();
-            messages.value.unshift(utils.getRawObj(messageForm));
-            messageForm.message = null;
+        const sendWish = async () => {
+            wishForm.time = utils.dateTime();
+            wishes.value.unshift(utils.getRawObj(wishForm));
+            wishForm.message = null;
         };
 
-        // Send message
+        // Send confirmation
         const sendConfirmation = async () => {
             Swal.fire({
                 position: "center",
@@ -130,38 +157,77 @@ createApp({
             });
         };
 
-        // Copy
-        const copyText = async (text) => {
-            try {
-                await navigator.clipboard.writeText(text);
-                utils.toast("success", "Rekening telah disalin");
-            } catch (err) {
-                console.error("Failed to copy: ", err);
-                utils.toast("error", "Gagal menyalin rekening !");
-            }
+        // Get invitation
+        const loadInvitation = async () => {
+            var result = await utils.getInvitation();
+            // Set invitation data
+            invitation.value = result.data.data.invitation;
+            // Set wedding data
+            var wedding_data = invitation.value.wedding_data;
+            // Set guest
+            guest.value = result.data.data.guest;
+            // Set features
+            features.quotes_feature = wedding_data.quotes_feature;
+            features.video_feature = wedding_data.video_feature;
+            features.akad_feature = wedding_data.akad_feature;
+            features.reception_feature = wedding_data.reception_feature;
+            features.gift_feature = wedding_data.gift_feature;
+            features.gallery_feature = wedding_data.gallery_feature;
+            features.rsvp_feature = wedding_data.rsvp_feature;
+            features.wish_feature = wedding_data.wish_feature;
+            features.story_feature = wedding_data.story_feature;
+            features.music_feature = wedding_data.music_feature;
+            features.custom_music_feature = wedding_data.custom_music_feature;
+            // Set carousels data
+            carousels.value = wedding_data.galleries;
+            // Set galleries data
+            galleries.value = wedding_data.galleries;
+            // Set stories data
+            stories.value = wedding_data.stories;
+            // Set gifts data
+            gifts.value = wedding_data.gift_channels;
+            // Set wishes
+            wishes.value = invitation.value?.wishes;
+            // Set music data
+            music.init();
+            // Set custom field
+            custom_field.value = wedding_data.custom_field;
         };
 
         // Mounted
         onMounted(async () => {
+            // Load invitation
             await loadInvitation();
-            await loadMessages(); // Load messages
-            initPage(); // Init Page
+            // Init Page
+            initPage();
+            // Start countdown
+            countdown.start();
+            // Set image cover
+            theme.setImageCover();
+            // Set invitation background
+            theme.setInvitationBackground();
+            // Set wish background
+            theme.setWishBackground();
         });
 
         // Export
         return {
             utils,
             invitation,
-            messages,
-            messageForm,
+            carousels,
+            stories,
+            wishes,
+            galleries,
+            wishForm,
             guest,
             gifts,
-            galleries,
             music,
-            sendMessage,
+            features,
+            custom_field,
+            countdown,
+            sendWish,
             sendConfirmation,
             openCover,
-            copyText,
         };
     },
 }).mount("#root");

@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('wishes', function (Blueprint $table) {
+        Schema::create('form_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('invitation_id')->constrained('invitations', 'id')->cascadeOnDelete();
-            $table->foreignId('guest_id')->nullable()->constrained('guests', 'id')->cascadeOnDelete();
             $table->string('name');
-            $table->text('wish_text');
+            $table->string('code')->unique();
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('wishes');
+        Schema::dropIfExists('form_types');
     }
 };

@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('wishes', function (Blueprint $table) {
+        Schema::create('guests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('invitation_id')->constrained('invitations', 'id')->cascadeOnDelete();
-            $table->foreignId('guest_id')->nullable()->constrained('guests', 'id')->cascadeOnDelete();
             $table->string('name');
-            $table->text('wish_text');
+            $table->string('link_name');
+            $table->string('email');
+            $table->string('phone');
+            $table->boolean('is_sended')->default(false);
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('wishes');
+        Schema::dropIfExists('guests');
     }
 };

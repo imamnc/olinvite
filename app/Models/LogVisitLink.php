@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Wish extends Model
+class LogVisitLink extends Model
 {
     use HasFactory;
 
     /**
-     * Get the guest that owns the Wish
+     * Get the guest that owns the LogVisitLink
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
