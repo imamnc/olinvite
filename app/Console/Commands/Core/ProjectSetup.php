@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Core;
 
 use Illuminate\Console\Command;
 
@@ -18,7 +18,7 @@ class ProjectSetup extends Command
      *
      * @var string
      */
-    protected $description = 'This command is for setting up olinivte project';
+    protected $description = 'This is command for setting up olinivte project';
 
     /**
      * Execute the console command.

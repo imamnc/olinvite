@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Collections;
 
 use App\Models\BankChannel;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;

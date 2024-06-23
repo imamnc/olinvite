@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Core;
 
 use Illuminate\Console\Command;
 
@@ -18,7 +18,7 @@ class DatabaseMigrateInOrder extends Command
      *
      * @var string
      */
-    protected $description = 'Run migration in ordered steps';
+    protected $description = 'Run migration in defined order steps';
 
     /**
      * Execute the console command.

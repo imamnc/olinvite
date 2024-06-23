@@ -1,30 +1,28 @@
 <?php
 
-namespace Database\Seeders;
+namespace App\Services;
 
 use App\Models\Invitation;
-use App\Models\Story;
 use App\Models\Theme;
 use Carbon\Carbon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
-class InvitationSeeder extends Seeder
+class SeederService
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    // Default password
+    private static $password = 'password123#';
+
+    /* SEED THEME 1 */
+    public static function theme1()
     {
-        // Invitation
+        // Create Invitation Data
         $invitation = Invitation::create([
             'theme_id' => 1, // Theme
             'music_id' => 1, // Music
             'prefix_route' => 'weddingcontoh',
             'code' => substr(bin2hex(random_bytes(8)), 0, 8),
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make(self::$password),
             'password_default' => '12345678',
             'customer_name' => 'Kacoon',
             'phone' => '+6285735692773',
@@ -33,14 +31,8 @@ class InvitationSeeder extends Seeder
             'is_active' => true,
             'is_published' => true
         ]);
-        // Create custom fields
-        $theme = Theme::find(1);
-        $custom_forms = $theme->custom_forms;
-        $custom_fields = [];
-        foreach ($custom_forms as $cform) {
-            $custom_fields[$cform->key_name] = ($cform->form_type_id != 4) ? null : [];
-        }
-        // Wedding Data
+
+        // Create Wedding Data
         $invitation->wedding_data()->create([
             // Groom
             'groom_nickname' => 'Romeo',
@@ -83,10 +75,10 @@ class InvitationSeeder extends Seeder
             // Gift Address
             'gift_address' => 'Jl. Raya Pasar Menganti No 199, Gresik',
             // Custom Fields
-            'custom_field' => json_encode($custom_fields)
+            'custom_field' => null
         ]);
 
-        // Seed guests
+        // Create guests data
         $invitation->guests()->create([
             'name' => 'John Doe',
             'link_name' => strtolower('John Doe'),
@@ -94,20 +86,23 @@ class InvitationSeeder extends Seeder
             'phone' => '+6285735692331',
         ]);
 
-        // Delete all invitations files
-        Storage::deleteDirectory('invitations');
-
-        // Seed couple
+        // Create couple data
         $couple_photos = Storage::disk('root')->allFiles('/storage/seeders/weddingcouple');
         foreach ($couple_photos as $key => $source) {
             $target1 = str_replace('storage/seeders/weddingcouple', "storage/app/public/invitations/$invitation->id", $source);
-            $target2 = str_replace('storage/seeders/weddingcouple', "storage/invitations/$invitation->id", $source);
-            Storage::disk('root')->copy($source, $target1);
         }
         $invitation->wedding_data()->update([
             'groom_photo' => "storage/invitations/$invitation->id/groom.jpg",
             'bride_photo' => "storage/invitations/$invitation->id/bride.jpg"
         ]);
+
+        // Create wedding data custom fields
+        $theme = Theme::find(1);
+        $custom_forms = $theme->custom_forms;
+        $custom_fields = [];
+        foreach ($custom_forms as $cform) {
+            $custom_fields[$cform->key_name] = ($cform->form_type_id != 4) ? null : [];
+        }
 
         // Seed gallery & story
         $gallery_photos = Storage::disk('root')->allFiles('/storage/seeders/weddinggallery');
