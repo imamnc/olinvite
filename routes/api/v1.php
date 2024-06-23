@@ -161,6 +161,8 @@ Route::prefix('v1')->name('v1.')->group(function () {
     Route::prefix('/invitation')->name('invitation.')->group(function () {
         Route::get('/', [InvitationController::class, 'get'])->name('get');
         Route::get('/check_prefix_route', [InvitationController::class, 'check_prefix_route'])->name('check_prefix_route');
+        Route::post('/wish', [InvitationController::class, 'sendWish'])->name('send_wish');
+        Route::post('/rsvp', [InvitationController::class, 'sendRsvp'])->name('send_rsvp');
         // Guarded
         Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('/', [InvitationController::class, 'create'])->name('create');

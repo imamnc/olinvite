@@ -83,6 +83,14 @@ a {
     margin-bottom: 0;
 }
 
+.modal {
+    z-index: 11000;
+}
+
+.modal-backdrop {
+    z-index: 10000;
+}
+
 /* ==============================================================================
  SCROLLBAR
 ============================================================================== */
@@ -119,6 +127,29 @@ a {
     background-color: rgba(255, 255, 255, 0.6);
     font-size: 25px;
     cursor: pointer;
+}
+
+/* ==============================================================================
+ QRCODE
+============================================================================== */
+.qrcode-trigger {
+    position: fixed;
+    z-index: 9999;
+    top: 55%;
+    right: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    background-color: rgba(255, 255, 255, 0.6);
+    font-size: 25px;
+    cursor: pointer;
+}
+
+#qrcode img {
+    display: inline-block !important;
 }
 
 /* ==============================================================================

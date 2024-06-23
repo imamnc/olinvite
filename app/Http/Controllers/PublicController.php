@@ -6,6 +6,7 @@ use App\Models\Invitation;
 use App\Services\AppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Crypt;
 
 class PublicController extends Controller
 {
@@ -31,6 +32,9 @@ class PublicController extends Controller
         if (!$invitation || !$guest) {
             abort(404);
         }
+
+        // Create qrcode payload
+        $guest->qrcode = $this->encrypt($guest->id);
 
         // Generate response
         if ($request->wantsJson()) {

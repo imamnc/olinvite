@@ -10,6 +10,8 @@ class Wish extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     /**
      * Get the guest that owns the Wish
      *

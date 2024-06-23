@@ -134,6 +134,63 @@ createApp({
             music.start();
         };
 
+        // RSVP
+        const rsvp = {
+            form: reactive({
+                invitation_id: null,
+                guest_id: null,
+                person: null,
+                confirmation: "",
+            }),
+            error: reactive({
+                person: null,
+                confirmation: null,
+            }),
+            save: async () => {
+                try {
+                    rsvp.resetError();
+                    await tools.sendRsvp(rsvp.form);
+                } catch (error) {
+                    if (error.response.status == 422) {
+                        if (error.response.data.data) {
+                            rsvp.resetError();
+                            for (const key in error.response.data.data) {
+                                const item = error.response.data.data[key];
+                                rsvp.error[key] = item[0];
+                            }
+                        }
+                    } else {
+                        tools.toast("error", error.response.data.message);
+                    }
+                    return;
+                }
+                // Toast success
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    html: `<h2 class="pb-3">Konfirmasi kehadiran disimpan</h2>`,
+                    showConfirmButton: false,
+                    timer: 2000,
+                });
+            },
+            resetPerson: () => {
+                rsvp.form.person = null;
+            },
+            resetError: () => {
+                for (const key in rsvp.error) {
+                    rsvp.error[key] = null;
+                }
+            },
+            init: () => {
+                rsvp.form.invitation_id = invitation.value.id;
+                rsvp.form.guest_id = guest.value.id;
+                rsvp.form.confirmation = guest.value.rsvp?.confirmation;
+                rsvp.form.person = guest.value.rsvp?.person
+                    ? guest.value.rsvp?.person
+                    : "";
+            },
+        };
+
         // Wish
         const wishForm = reactive({
             name: guest?.name,
@@ -146,16 +203,27 @@ createApp({
             wishForm.message = null;
         };
 
-        // Send confirmation
-        const sendConfirmation = async () => {
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                html: `<h2 class="pb-3">Konfirmasi kehadiran disimpan</h2>`,
-                showConfirmButton: false,
-                timer: 2000,
-            });
-        };
+        // QR Code
+        const qrcode = reactive({
+            payload: null,
+            modal: null,
+            open: () => {
+                document.getElementById("qrcode-name").innerText =
+                    guest.value.name;
+                tools.showQR(qrcode.payload);
+                qrcode.modal.show();
+                console.log("oke");
+            },
+            initModal: () => {
+                qrcode.modal = new bootstrap.Modal(
+                    document.getElementById("qrcode-modal")
+                );
+            },
+            setPayload: () => {
+                console.log(guest.value);
+                qrcode.payload = guest.value.qrcode.toString();
+            },
+        });
 
         // Get invitation
         const loadInvitation = async () => {
@@ -208,6 +276,11 @@ createApp({
             theme.setInvitationBackground();
             // Set wish background
             theme.setWishBackground();
+            // Set rsvp form
+            rsvp.init();
+            // Init qrcode modal
+            qrcode.initModal();
+            qrcode.setPayload();
         });
 
         // Export
@@ -218,6 +291,7 @@ createApp({
             stories,
             wishes,
             galleries,
+            rsvp,
             wishForm,
             guest,
             gifts,
@@ -225,8 +299,8 @@ createApp({
             features,
             custom_field,
             countdown,
+            qrcode,
             sendWish,
-            sendConfirmation,
             openCover,
         };
     },

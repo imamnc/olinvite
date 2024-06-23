@@ -266,5 +266,26 @@ return [
             'success' => 'Link tersedia dan dapat digunakan',
             'failed' => 'Link sudah digunakan undangan lain'
         ],
+        'send_wish' => [
+            'success' => 'Wish telah dikirimkan',
+            'failed' => 'Gagal mengirim wish'
+        ],
+        'send_rsvp' => [
+            'success' => 'Konfirmasi kehadiran telah disimpan'
+        ],
+    ],
+    'guest' => [
+        'create' => [
+            'success' => 'Berhasil menambahkan tamu undangan'
+        ],
+        'get' => [
+            'success' => 'Berhasil mendapatkan data tamu undangan'
+        ],
+        'update' => [
+            'success' => 'Berhasil mengubah data tamu undangan'
+        ],
+        'delete' => [
+            'success' => 'Berhasil menghapus data tamu undangan'
+        ]
     ],
 ];

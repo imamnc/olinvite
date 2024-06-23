@@ -4,14 +4,14 @@ namespace App\Console\Commands\Core;
 
 use Illuminate\Console\Command;
 
-class GenerateDocs extends Command
+class GenerateApiDocs extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'olinvite:swagger-generate';
+    protected $signature = 'swagger:generate';
 
     /**
      * The console command description.
@@ -26,7 +26,6 @@ class GenerateDocs extends Command
     public function handle()
     {
         $this->call('l5-swagger:generate');
-
         return Command::SUCCESS;
     }
 }

@@ -3,6 +3,10 @@
 ========================================================*/
 /* DATA */
 const momentLocale = "id";
+const baseUrl = `${window.location.protocol}//${window.location.hostname}${
+    window.location.port ? ":" + window.location.port : ""
+}`;
+const apiUrl = `${baseUrl}/api/v1`;
 
 /* TOOLS */
 const tools = {
@@ -13,6 +17,20 @@ const tools = {
         // Remove no scroll class
         let body = document.querySelector("body");
         body.classList.remove("no-scroll");
+    },
+    // Send rsvp
+    sendRsvp: (form) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                var response = await axios.post(
+                    `${apiUrl}/invitation/rsvp`,
+                    form
+                );
+                resolve(response);
+            } catch (error) {
+                reject(error);
+            }
+        });
     },
     // Get invitation data
     getInvitation: async () => {
@@ -101,6 +119,17 @@ const tools = {
         } catch (err) {
             console.error("Failed to copy: ", err);
             tools.toast("error", "Gagal menyalin rekening !");
+        }
+    },
+    showQR: (payload) => {
+        const qrCodeContainer = document.getElementById("qrcode");
+        if (qrCodeContainer) {
+            // Clear any existing QR code
+            qrCodeContainer.innerHTML = "";
+            // Generate QR code
+            if (payload) {
+                var qr = new QRCode(qrCodeContainer, payload);
+            }
         }
     },
 };

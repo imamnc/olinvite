@@ -89,7 +89,8 @@ class SeederService
         // Create couple data
         $couple_photos = Storage::disk('root')->allFiles('/storage/seeders/weddingcouple');
         foreach ($couple_photos as $key => $source) {
-            $target1 = str_replace('storage/seeders/weddingcouple', "storage/app/public/invitations/$invitation->id", $source);
+            $target = str_replace('storage/seeders/weddingcouple', "storage/app/public/invitations/$invitation->id", $source);
+            Storage::disk('root')->copy($source, $target);
         }
         $invitation->wedding_data()->update([
             'groom_photo' => "storage/invitations/$invitation->id/groom.jpg",

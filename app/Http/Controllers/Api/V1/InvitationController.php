@@ -6,11 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Invitation\CheckPrefixRouteRequest;
 use App\Http\Requests\Invitation\CreateInvitationRequest;
 use App\Http\Requests\Invitation\GetInvitationRequest;
+use App\Http\Requests\Invitation\SendRsvpRequest;
+use App\Http\Requests\Invitation\SendWishRequest;
 use App\Http\Requests\Invitation\UpdateInvitationRequest;
+use App\Models\Guest;
 use App\Models\Invitation;
 use App\Models\Invoice;
+use App\Models\Rsvp;
 use App\Models\Theme;
 use App\Models\WeddingData;
+use App\Models\Wish;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -823,6 +828,380 @@ class InvitationController extends Controller
         // Success response
         return $this->successResponse(trans('api-response.invitation.check_prefix_route.success'), [
             "invitation" => $invitation
+        ]);
+    }
+
+    /**
+     * @OA\ Post(
+     *     path="/invitation/wish",
+     *     summary="Send wish to invitation",
+     *     tags={"Invitations"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *              mediaType="application/json",
+     *				@OA\Schema(
+     *                 @OA\Property(
+     *                     property="invitation_id",
+     *                     type="number",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="guest_id",
+     *                     type="number",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="wish_text",
+     *                     type="string",
+     *                 )
+     *             ),
+     *             example={
+     *                 "invitation_id": 1,
+     *                 "guest_id": 1,
+     *                 "wish_text": "Wish you all the best on your wedding"
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                  "success": true,
+     *                  "message": "false",
+     *                  "data": {}
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation Error",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="error_code",
+     *                     type="integer",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                  "success": false,
+     *                  "message": "Validation errors",
+     *                  "error_code": 422,
+     *                  "data": {
+     *                      "errors": {
+     *                          "email": "<Error Messages>"
+     *                      }
+     *                  }
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated Request",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="error_code",
+     *                     type="integer",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                 "success": false,
+     *                 "message": "Unauthenticated",
+     *                 "error_code": 401,
+     *                 "data": {}
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="error_code",
+     *                     type="integer",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                  "success": false,
+     *                  "message": "<Error Messages>",
+     *                  "error_code": 500,
+     *                  "data": {}
+     *             }
+     *         )
+     *     ),
+     * )
+     */
+    // Send wish to invitation
+    public function sendWish(SendWishRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            // Get guest
+            $guest = Guest::find($request->guest_id);
+            // Create wish
+            $wish = Wish::create([
+                'invitation_id' => $request->invitation_id,
+                'guest_id' => $request->guest_id,
+                'name' => $guest->name,
+                'wish_text' => $request->wish_text,
+            ]);
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return $this->failedResponse($e->getMessage(), $e->getCode());
+        }
+
+        // Success response
+        return $this->successResponse(trans('api-response.invitation.send_wish.success'), [
+            "wish" => $wish
+        ]);
+    }
+
+    /**
+     * @OA\ Post(
+     *     path="/invitation/rsvp",
+     *     summary="Send rsvp confirmation to invitation",
+     *     tags={"Invitations"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *              mediaType="application/json",
+     *				@OA\Schema(
+     *                 @OA\Property(
+     *                     property="invitation_id",
+     *                     type="number",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="guest_id",
+     *                     type="number",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="person",
+     *                     type="number",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="confirmation",
+     *                     type="string",
+     *                 )
+     *             ),
+     *             example={
+     *                 "invitation_id": 1,
+     *                 "guest_id": 1,
+     *                 "person": 1,
+     *                 "confirmation": "hadir"
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                  "success": true,
+     *                  "message": "false",
+     *                  "data": {}
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation Error",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="error_code",
+     *                     type="integer",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                  "success": false,
+     *                  "message": "Validation errors",
+     *                  "error_code": 422,
+     *                  "data": {
+     *                      "errors": {
+     *                          "email": "<Error Messages>"
+     *                      }
+     *                  }
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated Request",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="error_code",
+     *                     type="integer",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                 "success": false,
+     *                 "message": "Unauthenticated",
+     *                 "error_code": 401,
+     *                 "data": {}
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="success",
+     *                     type="boolean"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="message",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="error_code",
+     *                     type="integer",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="object",
+     *                 ),
+     *             ),
+     *             example={
+     *                  "success": false,
+     *                  "message": "<Error Messages>",
+     *                  "error_code": 500,
+     *                  "data": {}
+     *             }
+     *         )
+     *     ),
+     * )
+     */
+    // Send rsvp confirmation to invitation
+    public function sendRsvp(SendRsvpRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            // Check rsvp
+            $rsvp = Rsvp::where('invitation_id', $request->invitation_id)->where('guest_id', $request->guest_id);
+            if ($rsvp->first()) {
+                $rsvp->update([
+                    'person' => $request->person,
+                    'confirmation' => $request->confirmation,
+                ]);
+            } else {
+                // Create rsvp
+                $rsvp = Rsvp::create([
+                    'invitation_id' => $request->invitation_id,
+                    'guest_id' => $request->guest_id,
+                    'person' => $request->person,
+                    'confirmation' => $request->confirmation,
+                ]);
+            }
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return $this->failedResponse($e->getMessage(), $e->getCode());
+        }
+
+        // Success response
+        return $this->successResponse(trans('api-response.invitation.send_rsvp.success'), [
+            "rsvp" => $rsvp
         ]);
     }
 }

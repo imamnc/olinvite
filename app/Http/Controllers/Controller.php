@@ -194,4 +194,24 @@ class Controller extends BaseController
     {
         return substr(bin2hex(random_bytes($length_of_string)), 0, $length_of_string);
     }
+
+    // Encrypt
+    protected function encrypt($string)
+    {
+        $salt = 'olinvite';
+        $iv = random_bytes(openssl_cipher_iv_length('aes-128-cbc'));
+        $encrypted = openssl_encrypt($string, 'aes-128-cbc', $salt, 0, $iv);
+        return base64_encode($iv . $encrypted);
+    }
+
+    // Descrypt
+    protected function decrypt($encrypted)
+    {
+        $salt = 'olinvite';
+        $data = base64_decode($encrypted);
+        $iv_length = openssl_cipher_iv_length('aes-128-cbc');
+        $iv = substr($data, 0, $iv_length);
+        $encrypted = substr($data, $iv_length);
+        return openssl_decrypt($encrypted, 'aes-128-cbc', $salt, 0, $iv);
+    }
 }

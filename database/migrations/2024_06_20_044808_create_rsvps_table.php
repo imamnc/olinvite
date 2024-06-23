@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('invitation_id')->constrained('invitations', 'id')->cascadeOnDelete();
             $table->foreignId('guest_id')->constrained('guests', 'id')->cascadeOnDelete();
-            $table->enum('rsvp', ['hadir', 'tidak', 'ragu']);
+            $table->integer('person')->nullable()->comment('Number of person who will come');
+            $table->enum('confirmation', ['hadir', 'tidak', 'ragu']);
             $table->timestamps();
         });
     }

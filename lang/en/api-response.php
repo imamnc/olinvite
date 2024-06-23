@@ -266,5 +266,25 @@ return [
             'success' => 'Prefix route is available to use',
             'failed' => 'Prefix route is already in used'
         ],
+        'send_wish' => [
+            'success' => 'Wish has been sended'
+        ],
+        'send_rsvp' => [
+            'success' => 'Attendance confirmation was recorded'
+        ],
+    ],
+    'guest' => [
+        'create' => [
+            'success' => 'Guest was created successfully'
+        ],
+        'get' => [
+            'success' => 'Get data guest successfull'
+        ],
+        'update' => [
+            'success' => 'Guest was updated successfully'
+        ],
+        'delete' => [
+            'success' => 'Guest was deleted successfully'
+        ]
     ],
 ];

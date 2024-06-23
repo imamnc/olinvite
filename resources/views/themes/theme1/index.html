@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="/storage/themes/theme1/css/style.css" />
 </head>
 
-<body class="no-scroll">
+<body class="no-scroll" id="app">
     <!-- Main -->
     <div id="root">
         <!-- Cover -->
@@ -76,10 +76,15 @@
         </nav>
 
         <!-- Music Trigger -->
-        <div v-if="features.music_feature || features.custom_music_feature" @click="music.trigger" class="music-trigger"
-            id="music-trigger">
+        <div v-if="features.music_feature || features.custom_music_feature" @click="music.trigger"
+            class="music-trigger">
             <i class="fa fa-compact-disc" :class="{'fa-spin': music.playing.value}"></i>
         </div>
+
+        <!-- QR Trigger -->
+        <!-- <div class="qrcode-trigger" @click="qrcode.open">
+            <i class="fa fa-qrcode"></i>
+        </div> -->
 
         <!-- Hero -->
         <section class="segment hero" id="hero">
@@ -356,7 +361,7 @@
                         <h2 data-aos="fade-up" class="font-grethania text-white">Konfirmasi Kehadiran</h2>
                         <div class="confirmation-card card py-3" data-aos="fade-up">
                             <div class="card-body">
-                                <form method="post" @submit.prevent="sendConfirmation">
+                                <form method="post" @submit.prevent="rsvp.save">
                                     <!-- Name -->
                                     <div class="form-group mb-3">
                                         <label for="guest_name"><strong>Tamu</strong></label>
@@ -364,16 +369,28 @@
                                             disabled>
                                     </div>
                                     <!-- Confirmation -->
-                                    <div class="form-group">
+                                    <div class="form-group mb-3">
                                         <label for="confirmation"><strong>Konfirmasi</strong></label>
-                                        <select name="confirmation" id="confirmation" class="form-select mt-2">
+                                        <select v-model="rsvp.form.confirmation" @change="rsvp.resetPerson"
+                                            name="confirmation" id="confirmation" class="form-select mt-2"
+                                            :class='{"is-invalid": rsvp.error.confirmation}'>
+                                            <option value="">Pilih Kehadiran</option>
                                             <option value="hadir">Hadir</option>
                                             <option value="ragu">Ragu-Ragu</option>
                                             <option value="tidak">Tidak Hadir</option>
                                         </select>
+                                        <span class="invalid-feedback">{{ rsvp.error.confirmation }}</span>
                                     </div>
+                                    <!-- Jumlah Tamu -->
+                                    <div v-show="rsvp.form?.confirmation == 'hadir'" class="form-group mb-3">
+                                        <label for="person"><strong>Jumlah Tamu</strong></label>
+                                        <input v-model="rsvp.form.person" type="text" data-mask="integer"
+                                            class="form-control mt-2" :class='{"is-invalid": rsvp.error.person}'>
+                                        <span class="invalid-feedback">{{ rsvp.error.person }}</span>
+                                    </div>
+                                    <!-- Submit Button -->
                                     <div class="form-group mt-3 text-center">
-                                        <button type=" submit" class="btn bg-theme">
+                                        <button :disabled="guest.rsvp" type=" submit" class="btn bg-theme">
                                             <i class="far fa-save me-2"></i>
                                             Konfirmasi
                                         </button>
@@ -454,6 +471,39 @@
                 </div>
             </div>
         </footer>
+
+    </div>
+
+    <!-- QRcode Modal -->
+    <div class="modal fade" id="qrcode-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title">QR Code Tamu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <div id="qrcode"></div>
+                                <div class="text-center mt-4">
+                                    <h5>
+                                        <strong class="me-2">Tamu :</strong>
+                                        <span id="qrcode-name"></span>
+                                    </h5>
+                                    <span class="text-primary">
+                                        <i class="fa fa-info-circle me-2"></i>
+                                        Tunjukan QR code saat datang ke acara
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0"></div>
+            </div>
+        </div>
     </div>
 
     <!-- Script JS -->
