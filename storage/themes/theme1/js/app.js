@@ -192,16 +192,62 @@ createApp({
         };
 
         // Wish
-        const wishForm = reactive({
-            name: guest?.name,
-            message: null,
-            time: utils.dateTime(),
+        const wish = reactive({
+            form: reactive({
+                invitation_id: null,
+                guest_id: null,
+                name: null,
+                wish_text: null,
+            }),
+            error: reactive({
+                name: null,
+                wish_text: null,
+            }),
+            isProcess: false,
+            reload: async () => {
+                var result = await utils.getInvitation();
+                wishes.value = result.data.data.invitation.wishes;
+            },
+            save: async () => {
+                try {
+                    wish.resetError();
+                    wish.isProcess = true;
+                    await tools.sendWish(wish.form);
+                    wishes.value.unshift(utils.getRawObj(wish.form));
+                    await wish.reload();
+                    wish.isProcess = false;
+                } catch (error) {
+                    wish.isProcess = false;
+                    if (error.response.status == 422) {
+                        if (error.response.data.data) {
+                            wish.resetError();
+                            for (const key in error.response.data.data) {
+                                const item = error.response.data.data[key];
+                                wish.error[key] = item[0];
+                            }
+                        }
+                    } else {
+                        tools.toast("error", error.response.data.message);
+                    }
+                    return;
+                }
+                // Toast success
+                wish.resetForm();
+            },
+            resetForm: () => {
+                wish.form.wish_text = null;
+            },
+            resetError: () => {
+                for (const key in wish.error) {
+                    wish.error[key] = null;
+                }
+            },
+            init: () => {
+                wish.form.invitation_id = invitation.value.id;
+                wish.form.guest_id = guest.value.id;
+                wish.form.name = guest.value.name;
+            },
         });
-        const sendWish = async () => {
-            wishForm.time = utils.dateTime();
-            wishes.value.unshift(utils.getRawObj(wishForm));
-            wishForm.message = null;
-        };
 
         // QR Code
         const qrcode = reactive({
@@ -278,6 +324,8 @@ createApp({
             theme.setWishBackground();
             // Set rsvp form
             rsvp.init();
+            // Set wish form
+            wish.init();
             // Init qrcode modal
             qrcode.initModal();
             qrcode.setPayload();
@@ -292,7 +340,7 @@ createApp({
             wishes,
             galleries,
             rsvp,
-            wishForm,
+            wish,
             guest,
             gifts,
             music,
@@ -300,7 +348,6 @@ createApp({
             custom_field,
             countdown,
             qrcode,
-            sendWish,
             openCover,
         };
     },

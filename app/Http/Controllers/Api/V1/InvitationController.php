@@ -802,6 +802,7 @@ class InvitationController extends Controller
      *     ),
      * )
      */
+    // Check route prefix availability
     public function check_prefix_route(CheckPrefixRouteRequest $request)
     {
         try {
@@ -850,6 +851,10 @@ class InvitationController extends Controller
      *                     type="number",
      *                 ),
      *                 @OA\Property(
+     *                     property="name",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
      *                     property="wish_text",
      *                     type="string",
      *                 )
@@ -857,6 +862,7 @@ class InvitationController extends Controller
      *             example={
      *                 "invitation_id": 1,
      *                 "guest_id": 1,
+     *                 "name": "John Doe",
      *                 "wish_text": "Wish you all the best on your wedding"
      *             }
      *         )
@@ -1179,7 +1185,8 @@ class InvitationController extends Controller
             DB::beginTransaction();
             // Check rsvp
             $rsvp = Rsvp::where('invitation_id', $request->invitation_id)->where('guest_id', $request->guest_id);
-            if ($rsvp->first()) {
+            $rsvp_data = $rsvp->first();
+            if ($rsvp_data) {
                 $rsvp->update([
                     'person' => $request->person,
                     'confirmation' => $request->confirmation,

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code')->unique();
+            $table->string('value_type')->enum(['single', 'multiple'])->comment('Value type of JSON data (single or multiple)');
             $table->timestamps();
         });
     }

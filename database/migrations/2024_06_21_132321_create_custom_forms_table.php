@@ -18,13 +18,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('key_name')->comment('JSON key data name');
             $table->string('default_value')->nullable()->comment('Default value of JSON data');
-            $table->enum('value_type', ['single', 'multi'])->comment('Value type of JSON data (single or multiple)');
             $table->boolean('is_required')->default(false);
             $table->timestamps();
         });
     }
 
-    /**
+/**
      * Reverse the migrations.
      */
     public function down(): void

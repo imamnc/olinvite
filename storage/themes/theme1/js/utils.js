@@ -32,6 +32,20 @@ const tools = {
             }
         });
     },
+    // Send wish
+    sendWish: (form) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                var response = await axios.post(
+                    `${apiUrl}/invitation/wish`,
+                    form
+                );
+                resolve(response);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    },
     // Get invitation data
     getInvitation: async () => {
         try {

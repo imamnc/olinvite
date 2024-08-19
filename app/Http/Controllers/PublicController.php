@@ -22,7 +22,7 @@ class PublicController extends Controller
         $invitation = Invitation::with('theme', 'invoice', 'wedding_data', 'music', 'wishes')
             ->where('prefix_route', $prefix)->first();
 
-        // Return not found if guest doesn't exists
+        // Checking invitation and guest availability
         $guest = null;
         if ($invitation) {
             $guest = $invitation->guests->where('link_name', strtolower($guest_link_name))->first();
@@ -35,6 +35,11 @@ class PublicController extends Controller
 
         // Create qrcode payload
         $guest->qrcode = $this->encrypt($guest->id);
+
+        // Sorting messages
+        $wishes = $invitation->wishes->sortByDesc('id')->values()->all();
+        $invitation = (object) $invitation->toArray();
+        $invitation->wishes = $wishes;
 
         // Generate response
         if ($request->wantsJson()) {

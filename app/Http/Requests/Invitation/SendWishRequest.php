@@ -17,6 +17,7 @@ class SendWishRequest extends FormRequest
         return [
             "invitation_id" => "required|numeric|exists:invitations,id",
             "guest_id" => "required|numeric|exists:guests,id",
+            "name" => "required",
             "wish_text" => "required",
         ];
     }

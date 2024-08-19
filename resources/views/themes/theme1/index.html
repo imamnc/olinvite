@@ -82,9 +82,9 @@
         </div>
 
         <!-- QR Trigger -->
-        <!-- <div class="qrcode-trigger" @click="qrcode.open">
+        <div class="qrcode-trigger" @click="qrcode.open">
             <i class="fa fa-qrcode"></i>
-        </div> -->
+        </div>
 
         <!-- Hero -->
         <section class="segment hero" id="hero">
@@ -414,18 +414,25 @@
                                         <div class="wish-chat-item-content">
                                             <strong>
                                                 <i class="fa fa-user-circle me-1"></i>
-                                                {{ wish.name }}
+                                                <span>{{ wish.name }}</span>
+                                                <small class="float-end">
+                                                    <i class="fa fa-clock me-1"></i>
+                                                    {{ utils.dateFormat(wish.created_at, 'DD-MM-YYYY HH:mm') }}
+                                                </small>
                                             </strong>
-                                            <p class="mt-2">{{ wish . message }}</p>
+                                            <p class="mt-2">{{ wish.wish_text }}</p>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Form -->
-                                <form method="post" class="wish-form" @submit.prevent="sendWish">
-                                    <textarea v-model="wishForm.message" name="wish" class="form-control" rows="1"
-                                        required placeholder="Ketikan sesuatu..."></textarea>
-                                    <button type="submit" class="btn bg-theme">
-                                        <i class="fa fa-paper-plane"></i>
+                                <form method="post" class="wish-form" @submit.prevent="wish.save">
+                                    <textarea v-model="wish.form.wish_text" name="wish" class="form-control" rows="1"
+                                        required placeholder="Ketikan sesuatu..."
+                                        :class='{"is-invalid": wish.error.wish_text}'></textarea>
+                                    <span class="invalid-feedback">{{ wish.error.wish_text }}</span>
+                                    <button type="submit" :disabled="wish.isProcess == true" class="btn bg-theme">
+                                        <i v-if="wish.isProcess == true" class="fa fa-spinner fa-spin"></i>
+                                        <i v-else class="fa fa-paper-plane"></i>
                                     </button>
                                 </form>
                             </div>

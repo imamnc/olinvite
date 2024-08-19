@@ -16,42 +16,50 @@ class FormTypeSeeder extends Seeder
         // Input text
         FormType::create([
             'name' => 'Input Text',
-            'code' => 'text'
+            'code' => 'text',
+            'value_type' => 'single'
         ]);
         // Input textarea
         FormType::create([
             'name' => 'Textarea',
-            'code' => 'textarea'
+            'code' => 'textarea',
+            'value_type' => 'single'
         ]);
         // Upload image
         FormType::create([
             'name' => 'Upload Image',
-            'code' => 'upload_image'
+            'code' => 'upload_image',
+            'value_type' => 'single'
         ]);
         // Multi upload image
         FormType::create([
             'name' => 'Multi Upload Image',
-            'code' => 'multi_upload_image'
+            'code' => 'multi_upload_image',
+            'value_type' => 'mulitple'
         ]);
         // Input number
         FormType::create([
             'name' => 'Input Number',
-            'code' => 'number'
+            'code' => 'number',
+            'value_type' => 'single'
         ]);
         // Input phone
         FormType::create([
             'name' => 'Input Phone',
-            'code' => 'phone'
+            'code' => 'phone',
+            'value_type' => 'single'
         ]);
         // Input link
         FormType::create([
             'name' => 'Input Link',
-            'code' => 'link'
+            'code' => 'link',
+            'value_type' => 'single'
         ]);
         // Input youtube link
         FormType::create([
             'name' => 'Youtube Link',
-            'code' => 'youtube'
+            'code' => 'youtube',
+            'value_type' => 'single'
         ]);
     }
 }
