@@ -707,9 +707,18 @@ body::after {
     z-index: 1;
 }
 
+#particle {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
 #root {
     position: relative;
-    z-index: 2;
+    z-index: 3;
 }
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {

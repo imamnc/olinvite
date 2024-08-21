@@ -146,6 +146,11 @@ const tools = {
             }
         }
     },
+    startParticle: () => {
+        particlesJS.load('particle', '/json/particle.json', function() {
+            console.log('Particle start !');
+        });
+    }
 };
 
 /*========================================================

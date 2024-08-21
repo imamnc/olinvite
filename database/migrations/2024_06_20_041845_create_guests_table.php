@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('phone');
             $table->boolean('is_sended')->default(false);
+            $table->boolean('checked_in')->default(false);
             $table->timestamps();
         });
     }

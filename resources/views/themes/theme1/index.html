@@ -19,6 +19,8 @@
 </head>
 
 <body class="no-scroll" id="app">
+    <!-- Particle -->
+     <div id="particle"></div>
     <!-- Main -->
     <div id="root">
         <!-- Cover -->
@@ -31,7 +33,9 @@
                         <span>&</span>
                         <span>{{ invitation?.wedding_data?.bride_nickname }}</span>
                     </div>
-                    <div class="text-fabulous event-date">Selasa, 20 April 2023</div>
+                    <div class="text-fabulous event-date">
+                        {{ utils.dateFormat(invitation?.wedding_data?.countdown_date, 'dddd, LL') }}
+                    </div>
                     <div class="text-montserrat mt-3">
                         <strong class="text-theme"><i class="fa fa-envelope-open me-2"></i>Kepada :</strong>
                         <h5 class="text-white mt-2 text-capitalize">{{ guest?.name }}</h5>
@@ -388,13 +392,20 @@
                                             class="form-control mt-2" :class='{"is-invalid": rsvp.error.person}'>
                                         <span class="invalid-feedback">{{ rsvp.error.person }}</span>
                                     </div>
-                                    <!-- Submit Button -->
                                     <div class="form-group mt-3 text-center">
-                                        <button :disabled="guest.rsvp" type=" submit" class="btn bg-theme">
+                                        <!-- Submit Button -->
+                                        <button v-if="!guest.rsvp || (guest.rsvp && rsvp.isEdit)" type="submit" class="btn bg-theme">
                                             <i class="far fa-save me-2"></i>
                                             Konfirmasi
                                         </button>
+                                        <!-- Edit Confirmation -->
+                                         <button v-if="guest.rsvp" type="button" @click="rsvp.triggerEdit" :class="{'btn-secondary': !rsvp.isEdit, 'btn-danger': rsvp.isEdit}" class="btn ms-2">
+                                            <i v-if="!rsvp.isEdit" class="fa fa-pen"></i>
+                                            <i v-else class="fa fa-times-circle"></i>
+                                            <span v-if="!rsvp.isEdit" class="ms-2">Edit Kehadiran</span>
+                                         </button>
                                     </div>
+
                                 </form>
                             </div>
                         </div>
@@ -495,11 +506,24 @@
                             <div class="col-md-12 text-center">
                                 <div id="qrcode"></div>
                                 <div class="text-center mt-4">
-                                    <h5>
-                                        <strong class="me-2">Tamu :</strong>
-                                        <span id="qrcode-name"></span>
-                                    </h5>
-                                    <span class="text-primary">
+                                    <table class="table border">
+                                        <tr>
+                                            <td class="text-end w-50"><strong>Nama Tamu</strong></td>
+                                            <td>:</td>
+                                            <td class="text-start"><span id="qrcode-name"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-end px-2"><strong>Konfirmasi Kehadiran</strong></td>
+                                            <td>:</td>
+                                            <td class="text-start"><span id="qrcode-rsvp"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-end w-50"><strong>Status</strong></td>
+                                            <td>:</td>
+                                            <td class="text-start"><span id="qrcode-checkin"></span></td>
+                                        </tr>
+                                    </table>
+                                    <span class="d-block text-center bg-theme text-white py-2">
                                         <i class="fa fa-info-circle me-2"></i>
                                         Tunjukan QR code saat datang ke acara
                                     </span>

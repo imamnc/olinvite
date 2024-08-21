@@ -7,6 +7,9 @@ createApp({
 
         // Theme tools
         const theme = {
+            setTitle: () => {
+                document.querySelector('title').innerText = `${invitation.value?.wedding_data?.groom_nickname} & ${invitation.value?.wedding_data?.bride_nickname} | Olinvite`;
+            },
             setImageCover: () => {
                 if (custom_field.value.image_cover) {
                     document.getElementById(
@@ -135,21 +138,30 @@ createApp({
         };
 
         // RSVP
-        const rsvp = {
-            form: reactive({
+        const rsvp = reactive({
+            form: {
                 invitation_id: null,
                 guest_id: null,
                 person: null,
                 confirmation: "",
-            }),
+            },
             error: reactive({
                 person: null,
                 confirmation: null,
             }),
+            isEdit: false,
+            triggerEdit: () => {
+                if (rsvp.isEdit == true) {
+                    rsvp.isEdit = false
+                } else {
+                    rsvp.isEdit = true
+                }
+            },
             save: async () => {
                 try {
                     rsvp.resetError();
                     await tools.sendRsvp(rsvp.form);
+                    rsvp.isEdit = false
                 } catch (error) {
                     if (error.response.status == 422) {
                         if (error.response.data.data) {
@@ -184,12 +196,12 @@ createApp({
             init: () => {
                 rsvp.form.invitation_id = invitation.value.id;
                 rsvp.form.guest_id = guest.value.id;
-                rsvp.form.confirmation = guest.value.rsvp?.confirmation;
+                rsvp.form.confirmation = guest.value.rsvp?.confirmation ? guest.value.rsvp?.confirmation : '';
                 rsvp.form.person = guest.value.rsvp?.person
                     ? guest.value.rsvp?.person
                     : "";
             },
-        };
+        });
 
         // Wish
         const wish = reactive({
@@ -216,6 +228,7 @@ createApp({
                     wishes.value.unshift(utils.getRawObj(wish.form));
                     await wish.reload();
                     wish.isProcess = false;
+                    document.querySelector('.wish-card .card-body').scrollTop = 0
                 } catch (error) {
                     wish.isProcess = false;
                     if (error.response.status == 422) {
@@ -254,11 +267,26 @@ createApp({
             payload: null,
             modal: null,
             open: () => {
-                document.getElementById("qrcode-name").innerText =
-                    guest.value.name;
+                document.getElementById("qrcode-name").innerText = guest.value.name;
+                var kehadiran = null;
+                switch (guest.value.rsvp?.confirmation) {
+                    case 'hadir':
+                        kehadiran = "Hadir";
+                        break;
+                    case 'ragu':
+                        kehadiran = "Ragu - Ragu";
+                        break;
+                    case 'hadir':
+                        kehadiran = "Tidak Hadir";
+                        break;
+                    default:
+                        kehadiran = "Belum Diisi";
+                        break;
+                }
+                document.getElementById("qrcode-rsvp").innerText = kehadiran;
+                document.getElementById("qrcode-checkin").innerText = guest.value.checked_in ? 'Sudah Datang' : 'Belum Datang';
                 tools.showQR(qrcode.payload);
                 qrcode.modal.show();
-                console.log("oke");
             },
             initModal: () => {
                 qrcode.modal = new bootstrap.Modal(
@@ -266,7 +294,6 @@ createApp({
                 );
             },
             setPayload: () => {
-                console.log(guest.value);
                 qrcode.payload = guest.value.qrcode.toString();
             },
         });
@@ -316,6 +343,8 @@ createApp({
             initPage();
             // Start countdown
             countdown.start();
+            // Set page title
+            theme.setTitle();
             // Set image cover
             theme.setImageCover();
             // Set invitation background
@@ -329,6 +358,8 @@ createApp({
             // Init qrcode modal
             qrcode.initModal();
             qrcode.setPayload();
+            // Start particle
+            utils.startParticle();
         });
 
         // Export
